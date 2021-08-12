@@ -32,12 +32,9 @@ client.on("message", message => {
             }
             else{
                 const user = players.find( player => player.username == message.author.username);
-                if(user != undefined) {
-                    message.reply(`You have ${user.points} points`);
-                }
-                else{
-                    message.reply("You dont have any points");
-                }
+                user != undefined ? message.reply(`You have ${user.points} points`) :  message.reply("You dont have any points")
+               
+            
             }
         }
         else if(CMD_NAME == 'buyPokeBall'){
@@ -56,11 +53,26 @@ client.on("message", message => {
             }
 
             console.log(user);
+            
+            }
+        }
+
+        else if(CMD_NAME == 'seeStats'){
+            const user = players.find( player => player.username == message.author.username);
+            if(user == undefined){
+                message.reply("You're not registred yet");
+            } 
+            else{
+                let userString =``;
+                for (const key of Object.keys(user)) {
+                    userString+= `${key}: ${user[key]}\n`
+                }
+                message.reply(userString);
+            }
         }
     }
-        
 
-    }
+
     //HANDLE NORMAL MESSAGES
     else{
         if(players.length == 0){
