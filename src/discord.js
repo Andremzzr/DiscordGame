@@ -1,4 +1,4 @@
-const { Client, Intents } = require('discord.js');
+const { Client, Intents, MessageActionRow } = require('discord.js');
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 const PREFIX = "$";
@@ -6,6 +6,7 @@ const PREFIX = "$";
 require('dotenv').config();
 
 let players = [];
+
 
 client.once('ready', () => {
 	console.log(`Bot online: ${client.user.username}`);
@@ -17,62 +18,46 @@ client.on("message", message => {
     if(message.author.bot) return ;
     if(message.content.length == 0) return;
 
-    
+    if(message.content.startsWith(PREFIX)){
+        const [CMD_NAME, ... args] = message.content
+        .trim()
+        .substring(PREFIX.length)
+        .split(/\s+/);
 
-    const {username} = message.author;
-    if(players.length == 0){
-        if(message.content == '$points'){
-            message.reply("You don't have any points");
+        if(CMD_NAME == 'points'){
+            if(players.length == 0){
+                message.reply(`You don't have any points`)
+            }
+            else{
+                const user = players.find( player => player.username == message.author.username);
+                if(user != undefined) {
+                    message.reply(`You have ${user.points} points`);
+                }
+                else{
+                    message.reply("You dont have any points");
+                }
+            }
         }
-        else{
+
+        
+
+    }
+    else{
+        if(players.length == 0){
             players.push({
-                username,
-                points : message.content.length
-            });
-    
+                username: message.author.username,
+                points: message.content.length
+            })
             console.log(players);
         }
-        
-
-    }
-     else{  
-    
-        if(message.content == '$points'){
-            for (let i = 0; i < players.length; i++) {
-                const element = players[i];
-                if(message.author.username == element.username){
-                    message.reply(`You have ${element.points} points`);
-                }
-                else{
-                    message.reply("You don't have any points");
-                }
-                
-            }
-        }
         else{
-            for (let i = 0; i < players.length; i++) {
-                const listName = players[i].username;
-                if(listName == username){
-                    players[i].points += message.content.length;
-                }
-                else{
-                    players.push({
-                        username,
-                        points : message.content.length
-                    });
-            
-                    console.log(players);
-                }
-                
-            }
+            const user = players.find( player => player.username == message.author.username);
+            user.points += message.content.length;
+            console.log(players);
 
         }
-        
-    
-
-    
-
     }
+
 })
 
 
