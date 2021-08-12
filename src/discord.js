@@ -73,7 +73,17 @@ client.on("message", message => {
         }
         else{
             const user = players.find( player => player.username == message.author.username);
-            user.points += message.content.length;
+            if(user == undefined){
+                players.push({
+                    username: message.author.username,
+                    points: message.content.length,
+                    pokeball: 0
+                 
+            })}
+            else{
+
+                user.points += message.content.length;
+            }
             console.log(players);
         }
     }
