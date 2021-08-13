@@ -81,8 +81,8 @@ client.on("message", async (message) => {
                     total => { 
                         pokemonName = total;
                         user.pokeball--;
-                        user.pokemons.push(pokemonName);
-                        message.reply(`Yay, you catched a ${pokemonName}`);   
+                        user.pokemons.push(pokemonName.name);
+                        message.reply(`Yay, you catched a ${pokemonName.name}\n${pokemonName.image}`);   
                         }
                     )
                 }

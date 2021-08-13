@@ -37,12 +37,23 @@ const pokeRequest = async () =>{
         `https://pokeapi.co/api/v2/type/${generateType()}`
         ).then(total => {
            return {
-                name : total.data.name,
                 pokemons: total.data.pokemon
             }
         }).catch( err => {
             console.log(err);
-        }) 
+        }); 
+    
+    const getPokemonInfo = await axios.get(
+        `https://pokeapi.co/api/v2/pokemon/${getRandomPoke()}` 
+    ).then(total => {
+        return {
+            name : total.data.name,
+            image : total.data.sprites.front_default
+        }
+     }).catch( err => {
+         console.log(err);
+     }); 
+ 
     
      function getRandomPoke() {
         let count = 1;
@@ -55,7 +66,7 @@ const pokeRequest = async () =>{
         }
     }
     
-    return getRandomPoke();
+    return getPokemonInfo
 }
 
 
