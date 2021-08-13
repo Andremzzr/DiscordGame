@@ -14,17 +14,17 @@ client.once('ready', () => {
 
 
 
-client.on("message", message => {
+client.on("message", async (message) => {
     if(message.author.bot) return ;
     if(message.content.length == 0) return;
 
-
+    
     const user = players.find( player => player.username == message.author.username);
 
 
     // HANDLE COMMANDS
     if(message.content.startsWith(PREFIX)){
-        const [CMD_NAME, ... args] = message.content
+        const [CMD_NAME, args] = message.content
         .trim()
         .substring(PREFIX.length)
         .split(/\s+/);
@@ -34,22 +34,19 @@ client.on("message", message => {
                 message.reply(`You don't have any points`)
             }
             else{
-                // const user = players.find( player => player.username == message.author.username);
-                user != undefined ? message.reply(`You have ${user.points} points`) :  message.reply("You dont have any points")
-               
-            
+               user != undefined ? message.reply(`You have ${user.points} points`) :  message.reply("You dont have any points")
             }
         }
-        else if(CMD_NAME == 'buyPokeBall'){
-            // const user = players.find( player => player.username == message.author.username);
+        else if(CMD_NAME == 'buyPokeBall' && args > 0){
+           
             if(user == undefined){
                 message.reply("You don't have any points")
             }
             else{
-            if(user.points >= 10){
-                user.points -= 10;
-                user.pokeball++;
-                message.reply("Congrats, you bought a pokeball :D");
+            if(user.points >= 10 * args){
+                user.points -= 10 * args;
+                user.pokeball+= args;
+                message.reply(`Congrats, you bought ${args} pokeball(s) :D`);
             }
             else{
                 message.reply(`You have only ${user.points} points, you need to get more to buy a pokeball`)
@@ -61,7 +58,6 @@ client.on("message", message => {
         }
 
         else if(CMD_NAME == 'seeStats'){
-            // const user = players.find( player => player.username == message.author.username);
             if(user == undefined){
                 message.reply("You're not registred yet");
             } 
@@ -80,9 +76,15 @@ client.on("message", message => {
             }
             else{
                 if(user.pokeball > 0){
-                    user.pokeball--;
-                    user.pokemons++;
-                    message.reply(`Yay, you catched a ${pokemon}`);
+                    let pokemonName;   
+                    pokemon().then(
+                    total => { 
+                        pokemonName = total;
+                        user.pokeball--;
+                        user.pokemons.push(pokemonName);
+                        message.reply(`Yay, you catched a ${pokemonName}`);   
+                        }
+                    )
                 }
                 else{
                     message.reply("You do not have any pokeballs")
@@ -100,18 +102,18 @@ client.on("message", message => {
             players.push({
                 username: message.author.username,
                 points: message.content.length,
-                pokeball: 0
+                pokeball: 0,
+                pokemons: Array()
             })
             console.log(players);
         }
         else{
-            // const user = players.find( player => player.username == message.author.username);
             if(user == undefined){
                 players.push({
                     username: message.author.username,
                     points: message.content.length,
                     pokeball: 0,
-                    pokemons: 0
+                    pokemons: Array()
                  
             })}
             else{

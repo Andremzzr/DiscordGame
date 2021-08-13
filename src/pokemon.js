@@ -44,9 +44,6 @@ const pokeRequest = async () =>{
             console.log(err);
         }) 
     
-    
-        
-    
      function getRandomPoke() {
         let count = 1;
         let max = Math.floor(Math.random() * (getPokemon.pokemons.length - 1) + 1);
@@ -61,4 +58,6 @@ const pokeRequest = async () =>{
     return getRandomPoke();
 }
 
-module.expors = pokeRequest;
+
+
+module.exports = pokeRequest;
