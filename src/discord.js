@@ -6,7 +6,7 @@ const PREFIX = "$";
 require('dotenv').config();
 
 let players = [];
-
+const pokemon = require('./pokemon.js');
 
 client.once('ready', () => {
 	console.log(`Bot online: ${client.user.username}`);
@@ -17,6 +17,9 @@ client.once('ready', () => {
 client.on("message", message => {
     if(message.author.bot) return ;
     if(message.content.length == 0) return;
+
+
+    const user = players.find( player => player.username == message.author.username);
 
 
     // HANDLE COMMANDS
@@ -31,14 +34,14 @@ client.on("message", message => {
                 message.reply(`You don't have any points`)
             }
             else{
-                const user = players.find( player => player.username == message.author.username);
+                // const user = players.find( player => player.username == message.author.username);
                 user != undefined ? message.reply(`You have ${user.points} points`) :  message.reply("You dont have any points")
                
             
             }
         }
         else if(CMD_NAME == 'buyPokeBall'){
-            const user = players.find( player => player.username == message.author.username);
+            // const user = players.find( player => player.username == message.author.username);
             if(user == undefined){
                 message.reply("You don't have any points")
             }
@@ -58,7 +61,7 @@ client.on("message", message => {
         }
 
         else if(CMD_NAME == 'seeStats'){
-            const user = players.find( player => player.username == message.author.username);
+            // const user = players.find( player => player.username == message.author.username);
             if(user == undefined){
                 message.reply("You're not registred yet");
             } 
@@ -69,6 +72,24 @@ client.on("message", message => {
                 }
                 message.reply(userString);
             }
+        }
+
+        else if(CMD_NAME == 'tryCatch'){
+            if(user == undefined){
+                message.reply("You do not have any pokeballs");
+            }
+            else{
+                if(user.pokeball > 0){
+                    user.pokeball--;
+                    user.pokemons++;
+                    message.reply(`Yay, you catched a ${pokemon}`);
+                }
+                else{
+                    message.reply("You do not have any pokeballs")
+                }
+                
+            }
+
         }
     }
 
@@ -84,12 +105,13 @@ client.on("message", message => {
             console.log(players);
         }
         else{
-            const user = players.find( player => player.username == message.author.username);
+            // const user = players.find( player => player.username == message.author.username);
             if(user == undefined){
                 players.push({
                     username: message.author.username,
                     points: message.content.length,
-                    pokeball: 0
+                    pokeball: 0,
+                    pokemons: 0
                  
             })}
             else{
