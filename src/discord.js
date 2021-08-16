@@ -46,7 +46,7 @@ client.on("message", async (message) => {
             if(user.points >= 10 * args){
                 user.points -= 10 * args;
                 user.pokeball+= args;
-                message.reply(`Congrats, you bought ${args} pokeball(s) :D`);
+                message.reply(`Congrats, you bought ${args} pokeball(s) :D\n :baseball:`);
             }
             else{
                 message.reply(`You have only ${user.points} points, you need to get more to buy a pokeball`)
@@ -76,13 +76,13 @@ client.on("message", async (message) => {
             }
             else{
                 if(user.pokeball > 0){
-                    let pokemonName;   
+                    let pokeRequest;   
                     pokemon().then(
                     total => { 
-                        pokemonName = total;
+                        pokeRequest = total;
                         user.pokeball--;
-                        user.pokemons.push(pokemonName.name);
-                        message.reply(`Yay, you catched a ${pokemonName.name}\n${pokemonName.image}`);   
+                        user.pokemons.push(pokeRequest.name);
+                        message.reply(`Yay, you catched a ${pokeRequest.name}\nType: ${pokeRequest.type} ${pokeRequest.typeIcon}\n${pokeRequest.image}`);   
                         }
                     )
                 }
@@ -93,6 +93,7 @@ client.on("message", async (message) => {
             }
 
         }
+        
     }
 
 

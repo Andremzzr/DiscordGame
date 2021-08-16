@@ -1,6 +1,8 @@
 const axios = require('axios');
 
 const pokeRequest = async () =>{
+    let Type;
+    let Icon;
     const pokemonTypes = {
         normal : 1,
         fighting : 2,
@@ -22,11 +24,44 @@ const pokeRequest = async () =>{
         fairy: 18
     }
     
+    const typesEmoji = {
+        normal : ':fish_cake:' ,
+        fighting : ':boxing_glove:',
+        flying: ':eagle:',
+        poison: ':mushroom:',
+        ground: ':desert:',
+        rock: ':mountain:',
+        bug: ':cricket:',
+        ghost: ':ghost:',
+        steel: ':mechanical_arm:',
+        fire: ':fire:',
+        water: ':whale:',
+        grass: ':four_leaf_clover:',
+        electric: ':zap:',
+        psychic: ':candy:',
+        ice: ':snowman2:',
+        dragon: ':dragon:',
+        dark: ':dark_sunglasses:',
+        fairy: ':woman_fairy:'
+    }
+
+
+
+    const getEmoji = type => {
+        for (const key of Object.keys(typesEmoji)) {
+            if(type == [key]){
+                return typesEmoji[key];
+            }
+        }
+    }
+
     function generateType(){
         let count = 1;
         let max = Math.floor(Math.random() * (18 - 1) + 1);
         for (const key of Object.keys(pokemonTypes)) {
             if(count == max){
+                Type = [key];
+                Icon = getEmoji(Type);
                 return pokemonTypes[key]
             }
             count++;
@@ -48,6 +83,8 @@ const pokeRequest = async () =>{
     ).then(total => {
         return {
             name : total.data.name,
+            type : Type,
+            typeIcon: Icon,
             image : total.data.sprites.front_default
         }
      }).catch( err => {
@@ -66,9 +103,9 @@ const pokeRequest = async () =>{
         }
     }
     
+    
     return getPokemonInfo
 }
-
 
 
 module.exports = pokeRequest;
