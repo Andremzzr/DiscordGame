@@ -16,10 +16,10 @@ client.once('ready', () => {
 
 client.on("message", async (message) => {
     if(message.author.bot) return ;
-    if(message.content.length == 0) return;
+    if(message.content.length == 0 || message.content.length > 200) return;
 
     
-    const user = players.find( player => player.username == message.author.username);
+    const user = players.find( player => player.id == message.author.id);
 
 
     // HANDLE COMMANDS
@@ -103,13 +103,9 @@ client.on("message", async (message) => {
 
     //HANDLE NORMAL MESSAGES
     else{
-        if(message.content.length < 10 || message.content.length > 200){
-            return;
-        }
-        else{
             if(players.length == 0){
                 players.push({
-                    username: message.author.username,
+                    id: message.author.id,
                     points: message.content.length,
                     pokeball: 0,
                     pokemons: Array()
@@ -119,7 +115,7 @@ client.on("message", async (message) => {
             else{
                 if(user == undefined){
                     players.push({
-                        username: message.author.username,
+                        id: message.author.id,
                         points: message.content.length,
                         pokeball: 0,
                         pokemons: Array()
@@ -130,7 +126,7 @@ client.on("message", async (message) => {
                 }
                 console.log(players);
             }
-        }
+        
         
     }
     
