@@ -31,15 +31,15 @@ const pokeRequest = async () =>{
         poison: ':mushroom:',
         ground: ':desert:',
         rock: ':mountain:',
-        bug: ':cricket:',
+        bug: ':lady_beetle: ',
         ghost: ':ghost:',
         steel: ':mechanical_arm:',
         fire: ':fire:',
-        water: ':whale:',
+        water: ':droplet:',
         grass: ':four_leaf_clover:',
         electric: ':zap:',
         psychic: ':candy:',
-        ice: ':snowman2:',
+        ice: ':snowflake:',
         dragon: ':dragon:',
         dark: ':dark_sunglasses:',
         fairy: ':woman_fairy:'
@@ -62,12 +62,19 @@ const pokeRequest = async () =>{
             if(count == max){
                 Type = [key];
                 Icon = getEmoji(Type[0]);
-                console.log(Icon);
-                console.log(Type);
                 return pokemonTypes[key]
             }
             count++;
         }
+    }
+
+
+    const getStats = stat => {
+        let stats = ``;
+        for (const key of Object.keys(stat)) {
+            stats+=`- ${stat[key].stat.name}: ${stat[key].base_stat}\n`;
+        }
+        return stats;
     }
     
     const getPokemon = await axios.get(
@@ -83,10 +90,11 @@ const pokeRequest = async () =>{
     const getPokemonInfo = await axios.get(
         `https://pokeapi.co/api/v2/pokemon/${getRandomPoke()}` 
     ).then(total => {
-        
+        const stats = getStats(total.data.stats);
         return {
             name : total.data.name,
             type : Type,
+            stats,
             typeIcon: Icon,
             image : total.data.sprites.front_default
         }
@@ -110,5 +118,6 @@ const pokeRequest = async () =>{
     return getPokemonInfo
 }
 
+pokeRequest()
 
 module.exports = pokeRequest;

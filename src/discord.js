@@ -82,7 +82,11 @@ client.on("message", async (message) => {
                         pokeRequest = total;
                         user.pokeball--;
                         user.pokemons.push(pokeRequest.name);
-                        message.reply(`Yay, you catched a ${pokeRequest.name}\nType: ${pokeRequest.type} ${pokeRequest.typeIcon}\n${pokeRequest.image}`);   
+
+                        message.reply(`Yay, you catched a ${pokeRequest.name}
+                        \nType: ${pokeRequest.type} ${pokeRequest.typeIcon}
+                        \nStats:\n ${pokeRequest.stats}
+                        \n${pokeRequest.image}`);   
                         }
                     )
                 }
