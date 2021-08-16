@@ -1,7 +1,6 @@
 const axios = require('axios');
 
 const pokeRequest = async () =>{
-    let Type;
     let Icon;
     const pokemonTypes = {
         normal : 1,
@@ -60,14 +59,23 @@ const pokeRequest = async () =>{
         let max = Math.floor(Math.random() * (18 - 1) + 1);
         for (const key of Object.keys(pokemonTypes)) {
             if(count == max){
-                Type = [key];
-                Icon = getEmoji(Type[0]);
+                Icon = getEmoji(key);
                 return pokemonTypes[key]
             }
             count++;
         }
     }
 
+    const getTypes = (typeList) => {
+        let count = 0;
+        let typeArr =``; 
+        for (const key of Object.keys(typeList)) {
+            !count > 0 ? typeArr+=typeList[key].type.name : typeArr+=`/${typeList[key].type.name}`;
+            count++;
+        }
+
+        return typeArr;
+    }
 
     const getStats = stat => {
         let stats = ``;
@@ -91,6 +99,7 @@ const pokeRequest = async () =>{
         `https://pokeapi.co/api/v2/pokemon/${getRandomPoke()}` 
     ).then(total => {
         const stats = getStats(total.data.stats);
+        const Type = getTypes(total.data.types);
         return {
             name : total.data.name,
             type : Type,
