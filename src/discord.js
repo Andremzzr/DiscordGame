@@ -103,31 +103,37 @@ client.on("message", async (message) => {
 
     //HANDLE NORMAL MESSAGES
     else{
-        if(players.length == 0){
-            players.push({
-                username: message.author.username,
-                points: message.content.length,
-                pokeball: 0,
-                pokemons: Array()
-            })
-            console.log(players);
+        if(message.content.length < 10 || message.content.length > 200){
+            return;
         }
         else{
-            if(user == undefined){
+            if(players.length == 0){
                 players.push({
                     username: message.author.username,
                     points: message.content.length,
                     pokeball: 0,
                     pokemons: Array()
-                 
-            })}
-            else{
-
-                user.points += message.content.length;
+                })
+                console.log(players);
             }
-            console.log(players);
+            else{
+                if(user == undefined){
+                    players.push({
+                        username: message.author.username,
+                        points: message.content.length,
+                        pokeball: 0,
+                        pokemons: Array()
+                     
+                })}
+                else{
+                    user.points += message.content.length;
+                }
+                console.log(players);
+            }
         }
+        
     }
+    
 
 })
 
