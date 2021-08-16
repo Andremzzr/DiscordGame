@@ -61,7 +61,9 @@ const pokeRequest = async () =>{
         for (const key of Object.keys(pokemonTypes)) {
             if(count == max){
                 Type = [key];
-                Icon = getEmoji(Type);
+                Icon = getEmoji(Type[0]);
+                console.log(Icon);
+                console.log(Type);
                 return pokemonTypes[key]
             }
             count++;
@@ -81,6 +83,7 @@ const pokeRequest = async () =>{
     const getPokemonInfo = await axios.get(
         `https://pokeapi.co/api/v2/pokemon/${getRandomPoke()}` 
     ).then(total => {
+        
         return {
             name : total.data.name,
             type : Type,
