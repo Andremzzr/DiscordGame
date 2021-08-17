@@ -95,30 +95,39 @@ client.on("message", async (message) => {
         }
 
         else if(CMD_NAME == 'tryCatch'){
-            if(user == undefined){
-                message.reply("You do not have any pokeballs");
-            }
-            else{
-                if(user.pokeball > 0){
-                    let pokeRequest;   
-                    pokemon().then(
-                    total => { 
-                        pokeRequest = total;
-                        user.pokeball--;
-                        user.pokemons.push(pokeRequest.name);
-
-                        message.reply(`Yay, you catched a ${pokeRequest.name}
-                        \nType: ${pokeRequest.type} ${pokeRequest.typeIcon}
-                        \nStats:\n ${pokeRequest.stats}
-                        \n${pokeRequest.image}`);   
+            let pokeRequest;
+            pokemon()
+            .then(
+                total => {
+                    pokeRequest = total;
+                    Player.find({id: playerId})
+                    .then(
+                        player => {
+                            let pokemonArray = player[0].pokemons;
+                            let pokeballs = player[0].pokeballs;
+                            if(pokeballs > 0){
+                                pokemonArray.push(pokeRequest.name)
+                                Player.updateOne({id : playerId}, {
+                                    pokeballs : pokeballs - 1 ,
+                                    pokemons : pokemonArray
+                                    }, (err)=>{
+                                        message.reply(`Yay, you catched a ${pokeRequest.name}
+                                        \nType: ${pokeRequest.type} ${pokeRequest.typeIcon}
+                                        \nStats:\n${pokeRequest.stats}\n${pokeRequest.image}`);
+                                        if(err){
+                                            console.log(err);
+                                        }
+                                    }
+                                )
+                            }
+                            else{
+                                message.reply('You dont have enough pokeballs');
+                            }
+                            
                         }
                     )
                 }
-                else{
-                    message.reply("You do not have any pokeballs")
-                }
-                
-            }
+            )
 
         }
         
