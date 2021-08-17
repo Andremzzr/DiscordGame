@@ -5,8 +5,19 @@ const PREFIX = "$";
 
 require('dotenv').config();
 
-let players = [];
+
 const pokemon = require('./pokemon.js');
+const mongoose = require('mongoose');
+
+//DB CONFIG
+const db =require('./config/key').MongoUri;
+
+//CONNECT TO MONGO
+mongoose.connect(db, {useNewUrlParser: true})
+.then(() => console.log('MongoDb connected'))
+.catch((err) => console.log(err));
+
+
 
 client.once('ready', () => {
 	console.log(`Bot online: ${client.user.username}`);
@@ -18,8 +29,8 @@ client.on("message", async (message) => {
     if(message.author.bot) return ;
     if(message.content.length == 0 || message.content.length > 200) return;
 
-    
-    const user = players.find( player => player.id == message.author.id);
+    const playerId = message.author.id;
+    const Player = require('./models/Player');
 
 
     // HANDLE COMMANDS
@@ -28,33 +39,46 @@ client.on("message", async (message) => {
         .trim()
         .substring(PREFIX.length)
         .split(/\s+/);
-
+        
         if(CMD_NAME == 'points'){
-            if(players.length == 0){
-                message.reply(`You don't have any points`)
-            }
-            else{
-               user != undefined ? message.reply(`You have ${user.points} points`) :  message.reply("You dont have any points")
-            }
+            Player.find({id : playerId})
+            .then(player => {
+                if(player.length > 0){
+                    message.reply(`You have ${player[0].points} points`);
+                }
+                else{
+                    message.reply("You don't have any points");
+                }
+
+            })
+            .catch(err => console.log(err))
         }
         else if(CMD_NAME == 'buyPokeBall' && args > 0){
-           
-            if(user == undefined){
-                message.reply("You don't have any points")
-            }
-            else{
-            if(user.points >= 10 * args){
-                user.points -= 10 * args;
-                user.pokeball+= args;
-                message.reply(`Congrats, you bought ${args} pokeball(s) :D\n :baseball:`);
-            }
-            else{
-                message.reply(`You have only ${user.points} points, you need to get more to buy a pokeball`)
-            }
+            Player.find({id: playerId})
+            .then(
+                player => {
+                    const playerPoints = player[0].points;
+                    let playerPokeBalls= player[0].pokeballs;
 
-            console.log(user);
-            
-            }
+                    if(playerPoints < args * 10){
+                        message.reply("You don't have enough points");
+                    }  
+                    else{
+                        Player.updateOne({id : playerId}, {
+                            points : playerPoints - (args * 10),
+                            pokeballs: playerPokeBalls += parseInt(args) 
+                            }, (err)=>{
+                                message.reply(`You bougth ${args} pokeballs :baseball:`)
+                                if(err){
+                                    console.log(err);
+                                }
+                            }
+                        )
+                        .then(player => console.log(`Player ${playerId} updated`));     
+                    }
+                }
+            )
+           
         }
 
         else if(CMD_NAME == 'seeStats'){
@@ -103,29 +127,37 @@ client.on("message", async (message) => {
 
     //HANDLE NORMAL MESSAGES
     else{
-            if(players.length == 0){
-                players.push({
-                    id: message.author.id,
-                    points: message.content.length,
-                    pokeball: 0,
-                    pokemons: Array()
-                })
-                console.log(players);
-            }
-            else{
-                if(user == undefined){
-                    players.push({
-                        id: message.author.id,
-                        points: message.content.length,
-                        pokeball: 0,
-                        pokemons: Array()
-                     
-                })}
-                else{
-                    user.points += message.content.length;
+        Player.find({id : playerId})
+        .then(
+            player => {
+                //CREATING PLAYER IN DOCUMENT
+                if(player <= 0){
+                    const newPlayer = new Player({
+                        id: playerId,
+                        points : message.content.length,
+                        pokeballs : 0,
+                    });
+
+                    newPlayer.save()
+                    .then( player => console.log(`Player: ${player}`))
+                    .catch(err => console.lgo(err));
                 }
-                console.log(players);
+                
+                //UPDATING PLAYER DATA
+                else{
+                    Player.updateOne({id : playerId}, {
+                        points : player[0].points + message.content.length
+                        }, (err)=>{
+                            if(err){
+                                console.log(err);
+                            }
+                        }
+                    )
+                    .then(player => console.log(`Player ${playerId} updated`));                           
+                    
+                }
             }
+        )
         
         
     }

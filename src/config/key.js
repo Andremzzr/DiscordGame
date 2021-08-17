@@ -1,3 +1,4 @@
+require('dotenv').config();
 module.exports = {
-    MongoUri : ''
+    MongoUri : process.env.MONGODB_URI
 }
