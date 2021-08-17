@@ -82,16 +82,17 @@ client.on("message", async (message) => {
         }
 
         else if(CMD_NAME == 'seeStats'){
-            if(user == undefined){
-                message.reply("You're not registred yet");
-            } 
-            else{
-                let userString =``;
-                for (const key of Object.keys(user)) {
-                    userString+= `${key}: ${user[key]}\n`
+            
+            Player.find({id : playerId})
+            .then(
+                player => {
+                    message.reply(
+                        `Points: ${player[0].points}
+                        \nPokeballs: ${player[0].pokeballs}
+                        \nPokemons : ${player[0].pokemons}`
+                    )
                 }
-                message.reply(userString);
-            }
+            )
         }
 
         else if(CMD_NAME == 'tryCatch'){

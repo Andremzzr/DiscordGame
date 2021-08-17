@@ -24,7 +24,7 @@ const pokeRequest = async () =>{
     }
     
     const typesEmoji = require('./emoji');
-
+    const statsEmoji = require('./statsemoji');
 
 
     const getEmoji = type => {
@@ -60,11 +60,19 @@ const pokeRequest = async () =>{
 
     const getStats = stat => {
         let stats = ``;
+        let count  = 0;
+        let emoji;
         for (const key of Object.keys(stat)) {
-            stats+=`- ${stat[key].stat.name}: ${stat[key].base_stat}\n`;
+            if(statsEmoji[count][0] == stat[key].stat.name) {
+                emoji = statsEmoji[count][1]
+            }
+            stats+=`${emoji} ${stat[key].stat.name}: ${stat[key].base_stat}\n`;
+            count++;
         }
         return stats;
     }
+
+   
     
     const getPokemon = await axios.get(
         `https://pokeapi.co/api/v2/type/${generateType()}`
@@ -108,6 +116,6 @@ const pokeRequest = async () =>{
     return getPokemonInfo
 }
 
-pokeRequest()
+
 
 module.exports = pokeRequest;
