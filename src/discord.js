@@ -1,4 +1,4 @@
-const { Client, Intents, MessageActionRow } = require('discord.js');
+const { Client, Intents, MessageActionRow , MessageAttachment} = require('discord.js');
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 const PREFIX = "$";
@@ -31,11 +31,11 @@ client.on("message", async (message) => {
 
     const playerId = message.author.id;
     const Player = require('./models/Player');
-
+    const Pokeball = require('./Pokeball');
 
     // HANDLE COMMANDS
     if(message.content.startsWith(PREFIX)){
-        const [CMD_NAME, args] = message.content
+        const [CMD_NAME, ...args] = message.content
         .trim()
         .substring(PREFIX.length)
         .split(/\s+/);
@@ -53,22 +53,24 @@ client.on("message", async (message) => {
             })
             .catch(err => console.log(err))
         }
-        else if(CMD_NAME == 'buyPokeBall' && args > 0){
+        else if(CMD_NAME.toLocaleLowerCase() == 'buypokeball' && args[0] > 0 && args[1].trim() != ''){
+            
+            const newPokeball = new Pokeball(args[1]);
             Player.find({id: playerId})
-            .then(
+            .then(  
                 player => {
                     const playerPoints = player[0].points;
                     let playerPokeBalls= player[0].pokeballs;
 
-                    if(playerPoints < args * 10){
+                    if(playerPoints < args[0] * newPokeball.getPrice()){
                         message.reply("You don't have enough points");
                     }  
                     else{
                         Player.updateOne({id : playerId}, {
-                            points : playerPoints - (args * 10),
-                            pokeballs: playerPokeBalls += parseInt(args) 
+                            points : playerPoints - (args[0] * newPokeball.getPrice()),
+                            pokeballs: playerPokeBalls += parseInt(args[0]) 
                             }, (err)=>{
-                                message.reply(`You bougth ${args} pokeballs :baseball:`)
+                                message.reply(`You bougth ${args[0]} pokeballs ${args[1]} :baseball:`)
                                 if(err){
                                     console.log(err);
                                 }
@@ -110,8 +112,10 @@ client.on("message", async (message) => {
                     Player.find({id: playerId})
                     .then(
                         player => {
+                           
                             let pokemonArray = player[0].pokemons;
                             let pokeballs = player[0].pokeballs;
+                            
                             if(pokeballs > 0){
                                 pokemonArray.push(pokeRequest.name)
                                 Player.updateOne({id : playerId}, {
@@ -120,7 +124,8 @@ client.on("message", async (message) => {
                                     }, (err)=>{
                                         message.reply(`Yay, you caught a ${pokeRequest.name}
                                         \nType: ${pokeRequest.type} ${pokeRequest.typeIcon}
-                                        \nStats:\n${pokeRequest.stats}\n${pokeRequest.image}`);
+                                        \nStats:\n${pokeRequest.stats} ${pokeRequest.image}`);
+                                        
                                         if(err){
                                             console.log(err);
                                         }
@@ -138,6 +143,11 @@ client.on("message", async (message) => {
 
         }
         
+        else if(CMD_NAME == 'exchange'){
+
+        }
+        
+
     }
 
 
@@ -180,11 +190,6 @@ client.on("message", async (message) => {
     
 
 })
-
-
-
-
-
 
 
 client.login(process.env.DISCORD_TOKEN);
