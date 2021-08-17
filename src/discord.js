@@ -112,7 +112,7 @@ client.on("message", async (message) => {
                                     pokeballs : pokeballs - 1 ,
                                     pokemons : pokemonArray
                                     }, (err)=>{
-                                        message.reply(`Yay, you catched a ${pokeRequest.name}
+                                        message.reply(`Yay, you caught a ${pokeRequest.name}
                                         \nType: ${pokeRequest.type} ${pokeRequest.typeIcon}
                                         \nStats:\n${pokeRequest.stats}\n${pokeRequest.image}`);
                                         if(err){
