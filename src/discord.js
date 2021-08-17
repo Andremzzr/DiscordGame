@@ -86,11 +86,17 @@ client.on("message", async (message) => {
             Player.find({id : playerId})
             .then(
                 player => {
-                    message.reply(
-                        `Points: ${player[0].points}
-                        \nPokeballs: ${player[0].pokeballs}
-                        \nPokemons : ${player[0].pokemons}`
-                    )
+                    if(player.length == 0){
+                        message.reply("You're not registred yet :(")
+                    }
+                    else{
+                        message.reply(
+                            `Points: ${player[0].points}
+                            \nPokeballs: ${player[0].pokeballs}
+                            \nPokemons : ${player[0].pokemons}`
+                        )
+                    }
+                    
                 }
             )
         }
