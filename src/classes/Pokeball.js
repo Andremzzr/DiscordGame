@@ -29,17 +29,32 @@ module.exports = class Pokeball{
     getChance(){
         switch (this.getName()) {
             case 'normal':
-                return 35; 
+                return 20; 
                 
             case 'great':
-                return 45;
+                return 24;
             
             case 'master': 
-                return 60;
+                return 30;
 
             case 'ultra':
-                return 100;
+                return 60;
 
+            default:
+                break;
+        }
+    }
+
+    getIndex(){
+        switch (this.getName()) {
+            case 'normal':
+                return  0;
+            case 'great':
+                return  1;
+            case 'master':
+                return  2;
+            case 'ultra':
+                return  3;
             default:
                 break;
         }

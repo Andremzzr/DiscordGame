@@ -1,4 +1,4 @@
-const { Client, Intents, MessageActionRow , MessageAttachment} = require('discord.js');
+const { Client, Intents, MessageActionRow } = require('discord.js');
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 const PREFIX = "$";
@@ -10,7 +10,8 @@ const {
     buyCommand,
     statsCommand,
     tryCatchCommand,
-    pokeballPrices 
+    pokeballPrices,
+    em 
     } = require('./commands/commands');
 
 const pokemon = require('./pokemon.js');
@@ -39,7 +40,7 @@ client.on("message", async (message) => {
 
     const playerId = message.author.id;
     const Player = require('./models/Player');
-    const Pokeball = require('./Pokeball');
+    const Pokeball = require('./classes/Pokeball');
 
     // HANDLE COMMANDS
     if(message.content.startsWith(PREFIX)){
@@ -55,16 +56,12 @@ client.on("message", async (message) => {
             case 'buypokeball':
                 buyCommand(Player,Pokeball,message,playerId,args);
                 break;
-            case 'seeStats':
+            case 'stats':
                 statsCommand(Player,message,playerId);
                 break;
-            case 'tryCatch':
-                pokemon()
-                .then(
-                    total => {
-                        tryCatchCommand(total,Player,message,playerId)
-                    }
-                )
+            case 'catch':
+                const newPokeball = new Pokeball(args[0])    
+                tryCatchCommand(pokemon,Player,message,playerId,newPokeball);          
                 break;
             case 'prices':
                 pokeballPrices(message);
@@ -104,7 +101,7 @@ client.on("message", async (message) => {
                             }
                         }
                     )
-                    .then(player => console.log(`Player ${playerId} updated`));                           
+                                               
                     
                 }
             }

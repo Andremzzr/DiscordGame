@@ -12,9 +12,7 @@ const PlayerSchema = new mongoose.Schema({
     },
     pokeballs : {
         type: Array,
-        default : [
-            0,0,0,0
-        ]
+        default : [0,0,0,0]
     },
     pokemons: {
         type: Array,
