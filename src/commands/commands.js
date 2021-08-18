@@ -14,30 +14,51 @@ module.exports =  {
     },
     buyCommand : (Player,Pokeball,message,playerId,args) => {
         const newPokeball = new Pokeball(args[1]);
-            Player.find({id: playerId})
-            .then(  
-                player => {
-                    const playerPoints = player[0].points;
-                    let playerPokeBalls= player[0].pokeballs;
+        let index;
+        switch (newPokeball.getName()) {
+            case 'normal':
+                index = 0;
+                break;
+            case 'great':
+                index = 1;
+                break;
+            case 'master':
+                index = 2;
+                break;
+            case 'ultra':
+                index = 3;
+                break;
+            default:
+                break;
+        }
 
-                    if(playerPoints < args[0] * newPokeball.getPrice()){
-                        message.reply("You don't have enough points");
-                    }  
-                    else{
-                        Player.updateOne({id : playerId}, {
-                            points : playerPoints - (args[0] * newPokeball.getPrice()),
-                            pokeballs: playerPokeBalls += parseInt(args[0]) 
-                            }, (err)=>{
-                                message.reply(`You bougth ${args[0]} pokeballs ${args[1]} :baseball:`)
-                                if(err){
-                                    console.log(err);
-                                }
+        Player.find({id: playerId})
+        .then(  
+            player => {
+                const playerPoints = player[0].points;
+                let playerPokeBalls= player[0].pokeballs;
+                playerPokeBalls[index]+= parseInt(args[0]);
+
+                if(playerPoints < args[0] * newPokeball.getPrice()){
+                    message.reply("You don't have enough points");
+                }  
+                else{
+                    Player.updateOne({id : playerId}, {
+                        
+                        points : playerPoints - (args[0] * newPokeball.getPrice()),
+                        pokeballs: playerPokeBalls 
+                        
+                        }, (err)=>{
+                            message.reply(`You bougth ${args[0]} pokeballs ${args[1]} :baseball:`)
+                            if(err){
+                                console.log(err);
                             }
-                        )
-                        .then(player => console.log(`Player ${playerId} updated`));     
-                    }
+                        }
+                    )
+                    .then(player => console.log(`Player ${playerId} updated`));     
                 }
-            )
+            }
+        )
     },
     statsCommand : (Player,message,playerId) => {
         Player.find({id : playerId})
@@ -49,7 +70,11 @@ module.exports =  {
                     else{
                         message.reply(
                             `Points: ${player[0].points}
-                            \nPokeballs: ${player[0].pokeballs}
+                            \nPokeballs:
+                            \n -normal: ${player[0].pokeballs[0]}
+                            \n -greatball: ${player[0].pokeballs[1]}
+                            \n -master: ${player[0].pokeballs[2]}
+                            \n -ultra: ${player[0].pokeballs[3]}
                             \nPokemons : ${player[0].pokemons}`
                         )
                     }
@@ -88,7 +113,9 @@ module.exports =  {
                 
             }
         )
-    }
+    },
+
+    pokeballPrices : (message) => message.reply(`normal: 10\ngreat: 20\nmaster: 25\nultra: 100`)
     
 
 }
