@@ -5,6 +5,12 @@ const PREFIX = "$";
 
 require('dotenv').config();
 
+const {
+    commandPoints,
+    buyCommand,
+    statsCommand,
+    tryCatchCommand
+} = require('./commands/commands');
 
 const pokemon = require('./pokemon.js');
 const mongoose = require('mongoose');
@@ -21,6 +27,7 @@ mongoose.connect(db, {useNewUrlParser: true})
 
 client.once('ready', () => {
 	console.log(`Bot online: ${client.user.username}`);
+    console.log('---------------------------------')
 });
 
 
@@ -39,112 +46,28 @@ client.on("message", async (message) => {
         .trim()
         .substring(PREFIX.length)
         .split(/\s+/);
-        
-        if(CMD_NAME == 'points'){
-            Player.find({id : playerId})
-            .then(player => {
-                if(player.length > 0){
-                    message.reply(`You have ${player[0].points} points`);
-                }
-                else{
-                    message.reply("You don't have any points");
-                }
 
-            })
-            .catch(err => console.log(err))
-        }
-        else if(CMD_NAME.toLocaleLowerCase() == 'buypokeball' && args[0] > 0 && args[1].trim() != ''){
+        switch (CMD_NAME) {
+            case 'points':
+                commandPoints(Player, message,playerId);
+                break;
             
-            const newPokeball = new Pokeball(args[1]);
-            Player.find({id: playerId})
-            .then(  
-                player => {
-                    const playerPoints = player[0].points;
-                    let playerPokeBalls= player[0].pokeballs;
-
-                    if(playerPoints < args[0] * newPokeball.getPrice()){
-                        message.reply("You don't have enough points");
-                    }  
-                    else{
-                        Player.updateOne({id : playerId}, {
-                            points : playerPoints - (args[0] * newPokeball.getPrice()),
-                            pokeballs: playerPokeBalls += parseInt(args[0]) 
-                            }, (err)=>{
-                                message.reply(`You bougth ${args[0]} pokeballs ${args[1]} :baseball:`)
-                                if(err){
-                                    console.log(err);
-                                }
-                            }
-                        )
-                        .then(player => console.log(`Player ${playerId} updated`));     
+            case 'buypokeball':
+                buyCommand(Player,Pokeball,message,playerId,args);
+                break;
+            case 'seeStats':
+                statsCommand(Player,message,playerId);
+                break;
+            case 'tryCatch':
+                pokemon()
+                .then(
+                    total => {
+                        tryCatchCommand(total,Player,message,playerId)
                     }
-                }
-            )
-           
-        }
-
-        else if(CMD_NAME == 'seeStats'){
-            
-            Player.find({id : playerId})
-            .then(
-                player => {
-                    if(player.length == 0){
-                        message.reply("You're not registred yet :(")
-                    }
-                    else{
-                        message.reply(
-                            `Points: ${player[0].points}
-                            \nPokeballs: ${player[0].pokeballs}
-                            \nPokemons : ${player[0].pokemons}`
-                        )
-                    }
-                    
-                }
-            )
-        }
-
-        else if(CMD_NAME == 'tryCatch'){
-            let pokeRequest;
-            pokemon()
-            .then(
-                total => {
-                    pokeRequest = total;
-                    Player.find({id: playerId})
-                    .then(
-                        player => {
-                           
-                            let pokemonArray = player[0].pokemons;
-                            let pokeballs = player[0].pokeballs;
-                            
-                            if(pokeballs > 0){
-                                pokemonArray.push(pokeRequest.name)
-                                Player.updateOne({id : playerId}, {
-                                    pokeballs : pokeballs - 1 ,
-                                    pokemons : pokemonArray
-                                    }, (err)=>{
-                                        message.reply(`Yay, you caught a ${pokeRequest.name}
-                                        \nType: ${pokeRequest.type} ${pokeRequest.typeIcon}
-                                        \nStats:\n${pokeRequest.stats} ${pokeRequest.image}`);
-                                        
-                                        if(err){
-                                            console.log(err);
-                                        }
-                                    }
-                                )
-                            }
-                            else{
-                                message.reply('You dont have enough pokeballs');
-                            }
-                            
-                        }
-                    )
-                }
-            )
-
-        }
-        
-        else if(CMD_NAME == 'exchange'){
-
+                )
+                break;
+            default:
+                break;
         }
         
 
@@ -161,7 +84,6 @@ client.on("message", async (message) => {
                     const newPlayer = new Player({
                         id: playerId,
                         points : message.content.length,
-                        pokeballs : 0,
                     });
 
                     newPlayer.save()
