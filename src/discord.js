@@ -10,7 +10,7 @@ const {
     buyCommand,
     statsCommand,
     tryCatchCommand
-} = require('./commands/commands');
+    } = require('./commands/commands');
 
 const pokemon = require('./pokemon.js');
 const mongoose = require('mongoose');
@@ -51,7 +51,6 @@ client.on("message", async (message) => {
             case 'points':
                 commandPoints(Player, message,playerId);
                 break;
-            
             case 'buypokeball':
                 buyCommand(Player,Pokeball,message,playerId,args);
                 break;

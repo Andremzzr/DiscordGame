@@ -60,36 +60,34 @@ module.exports =  {
 
     tryCatchCommand : (total,Player,message,playerId) => {
         let pokeRequest = total;
-                    Player.find({id: playerId})
-                    .then(
-                        player => {
-                           
-                            let pokemonArray = player[0].pokemons;
-                            let pokeballs = player[0].pokeballs;
+        Player.find({id: playerId})
+        .then(
+            player => {
+            
+                let pokemonArray = player[0].pokemons;
+                let pokeballs = player[0].pokeballs;
+                
+                
+                if(pokeballs > 0){
+                    pokemonArray.push(pokeRequest.name)
+                    Player.updateOne({id : playerId}, {
+                        pokeballs : pokeballs - 1 ,
+                        pokemons : pokemonArray
+                        }, (err)=>{
+                            message.reply(`Yay, you caught a ${pokeRequest.name}
+                            \nType: ${pokeRequest.type} ${pokeRequest.typeIcon}
+                            \nStats:\n${pokeRequest.stats} ${pokeRequest.image}`);
                             
-                            
-                            if(pokeballs > 0){
-                                pokemonArray.push(pokeRequest.name)
-                                Player.updateOne({id : playerId}, {
-                                    pokeballs : pokeballs - 1 ,
-                                    pokemons : pokemonArray
-                                    }, (err)=>{
-                                        message.reply(`Yay, you caught a ${pokeRequest.name}
-                                        \nType: ${pokeRequest.type} ${pokeRequest.typeIcon}
-                                        \nStats:\n${pokeRequest.stats} ${pokeRequest.image}`);
-                                        
-                                        if(err){
-                                            console.log(err);
-                                        }
-                                    }
-                                )
-                            }
-                            else{
-                                message.reply('You dont have enough pokeballs');
-                            }
                             
                         }
                     )
+                }
+                else{
+                    message.reply('You dont have enough pokeballs');
+                }
+                
+            }
+        )
     }
     
 
