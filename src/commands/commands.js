@@ -60,7 +60,8 @@ module.exports =  {
                         \n:softball: greatball: ${player[0].pokeballs[1]}
                         \n:basketball: master: ${player[0].pokeballs[2]}
                         \n:crystal_ball: ultra: ${player[0].pokeballs[3]}
-                        \n:no_entry: Pokemons :${player[0].pokemons.map(pokemon => ' ' + pokemon.name)}`)
+                        \n:no_entry: Pokemons :${player[0].pokemons.map(pokemon => ' ' + pokemon.name)}
+                        \n:black_joker: Cards :${player[0].cards.map(card => ' ' + card.name)}`)
                         .setTitle('Stats')
                         .setTimestamp()
 
@@ -127,7 +128,7 @@ module.exports =  {
         )
     },
 
-    pokeballPrices : (message) => message.reply(`normal: 10 pts\ngreat: 20 pts\nmaster: 25 pts\nultra: 500 pts`),
+    pokeballPrices : (message) => message.reply(`normal: 10 pts\ngreat: 20 pts\nmaster: 25 pts\nultra: 500 pts\n card: 500 pts`),
 
     buycard : (pokemonName,message,Player,Embed) => {
         Player.find({id: message.author.id})
