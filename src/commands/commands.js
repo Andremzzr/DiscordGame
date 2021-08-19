@@ -43,7 +43,7 @@ module.exports =  {
             }
         )
     },
-    statsCommand : (Player,message,playerId) => {
+    statsCommand : (Player,message,playerId,embed) => {
         Player.find({id : playerId})
             .then(
                 player => {
@@ -51,14 +51,23 @@ module.exports =  {
                         message.reply("You're not registred yet :(")
                     }
                     else{
+
+                        embed
+                        .setThumbnail(message.author.avatarURL())
+                        .setDescription(
+                        `Player: ${message.author.username}
+                        \n:coin: : ${player[0].points}
+                        \nPokeballs:
+                        \n:baseball: normal: ${player[0].pokeballs[0]}
+                        \n:softball: greatball: ${player[0].pokeballs[1]}
+                        \n:basketball: master: ${player[0].pokeballs[2]}
+                        \n:crystal_ball: ultra: ${player[0].pokeballs[3]}
+                        \n:no_entry: Pokemons : ${player[0].pokemons}`)
+                        .setTitle('Stats')
+                        .setTimestamp()
+
                         message.reply(
-                            `:coin: : ${player[0].points}
-                            \nPokeballs:
-                            \n:baseball: normal: ${player[0].pokeballs[0]}
-                            \n:softball: greatball: ${player[0].pokeballs[1]}
-                            \n:basketball: master: ${player[0].pokeballs[2]}
-                            \n:crystal_ball: ultra: ${player[0].pokeballs[3]}
-                            \n:no_entry: Pokemons : ${player[0].pokemons}`
+                            {embeds: [embed]}
                         )
                     }
                     
@@ -66,7 +75,7 @@ module.exports =  {
             )
     },
 
-    tryCatchCommand : (pokemon,Player,message,playerId,newPokeball) => {
+    tryCatchCommand : (pokemon,Player,message,playerId,newPokeball,Embed) => {
     
         Player.find({id: playerId})
         .then(
@@ -79,23 +88,35 @@ module.exports =  {
                     if(Math.floor(Math.random() * (100) + 1) >= newPokeball.getChance()){
                         pokeballs[index]-= 1;
                         message.reply("Oh, the pokemon runned away :(");
+                        Player.updateOne({id : playerId}, {
+                            pokeballs : pokeballs,
+                            pokemons : pokemonArray
+                         }, (err)=>{console.log("PlayerUpdated")})
                     }
                     else{
                         pokemon()
                         .then(
                             pokeRequest => {
                                 pokemonArray.push(pokeRequest.name)
-                                message.reply(`Yay, you caught a ${pokeRequest.name}
-                                \nType: ${pokeRequest.type} ${pokeRequest.typeIcon}
-                                \nStats:\n${pokeRequest.stats} ${pokeRequest.image}`);
+                                Embed.setColor(pokeRequest.color)
+                                .setDescription(`Type: ${pokeRequest.type} ${pokeRequest.typeIcon}\n\n${pokeRequest.stats}`)
+                                .setTitle(pokeRequest.name)
+                                .setImage(pokeRequest.image)
+                                .setTimestamp()
+
+                                pokeballs[index]-= 1;
+
+                                Player.updateOne({id : playerId}, {
+                                    pokeballs : pokeballs,
+                                    pokemons : pokemonArray
+                                 }, (err)=>{console.log("PlayerUpdated")})
+
+                                message.reply({ embeds: [Embed] });
                             }
                         )
                     }
 
-                    Player.updateOne({id : playerId}, {
-                        pokeballs : pokeballs,
-                        pokemons : pokemonArray
-                     }, (err)=>{console.log("PlayerUpdated")})
+                   
 
                     
                 }
@@ -107,7 +128,7 @@ module.exports =  {
         )
     },
 
-    pokeballPrices : (message) => message.reply(`normal: 10 pts\ngreat: 20 pts\nmaster: 25 pts\nultra: 100 pts`),
+    pokeballPrices : (message) => message.reply(`normal: 10 pts\ngreat: 20 pts\nmaster: 25 pts\nultra: 150 pts`),
 
     
     

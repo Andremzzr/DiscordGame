@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { get } = require('mongoose');
 
 const pokeRequest = async () =>{
     let Icon;
@@ -23,6 +24,27 @@ const pokeRequest = async () =>{
         fairy: 18
     }
     
+    const pokemonColor = {
+        normal : '#D8D8D8'.toLocaleLowerCase(),
+        fighting : 'FF0000'.toLocaleLowerCase(),
+        flying: '#00FF91'.toLocaleLowerCase(),
+        poison: '#8C00FF'.toLocaleLowerCase(),
+        ground: '#89762B'.toLocaleLowerCase(),
+        rock: '#CDBA70'.toLocaleLowerCase(),
+        bug: '#3FFF00'.toLocaleLowerCase(),
+        ghost: '#9391EF'.toLocaleLowerCase(),
+        steel: '#A6A6A6'.toLocaleLowerCase(),
+        fire: '#FF6C00'.toLocaleLowerCase(),
+        water: '#208EFF'.toLocaleLowerCase(),
+        grass: '#38B151'.toLocaleLowerCase(),
+        electric: '#F4FF01'.toLocaleLowerCase(),
+        psychic: '#D6E579'.toLocaleLowerCase(),
+        ice: '#B5DFE1'.toLocaleLowerCase(),
+        dragon: '#00FF6E'.toLocaleLowerCase(),
+        dark: '#2C0090'.toLocaleLowerCase(),
+        fairy: '#FF7AF3'.toLocaleLowerCase()
+    }
+    
     const typesEmoji = require('./emoji');
     const statsEmoji = require('./statsemoji');
 
@@ -31,6 +53,14 @@ const pokeRequest = async () =>{
         for (const key of Object.keys(typesEmoji)) {
             if(type == [key]){
                 return typesEmoji[key];
+            }
+        }
+    }
+
+    const getColor = (type) => {
+        for (const key of Object.keys(pokemonColor)) {
+            if(key == type){
+                return pokemonColor[key]
             }
         }
     }
@@ -89,12 +119,14 @@ const pokeRequest = async () =>{
     ).then(total => {
         const stats = getStats(total.data.stats);
         const Type = getTypes(total.data.types);
+        const color = getColor(total.data.types);
         return {
             name : total.data.name,
             type : Type,
             stats,
             typeIcon: Icon,
-            image : total.data.sprites.front_default
+            image : total.data.sprites.front_default,
+
         }
      }).catch( err => {
          console.log(err);
@@ -112,10 +144,8 @@ const pokeRequest = async () =>{
         }
     }
     
-    
     return getPokemonInfo
 }
-
 
 
 module.exports = pokeRequest;

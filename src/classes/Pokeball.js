@@ -19,7 +19,7 @@ module.exports = class Pokeball{
                 return 25;
 
             case 'ultra':
-                return 100
+                return 500
 
             default:
                 break;
@@ -38,7 +38,7 @@ module.exports = class Pokeball{
                 return 30;
 
             case 'ultra':
-                return 60;
+                return 90;
 
             default:
                 break;

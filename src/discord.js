@@ -1,4 +1,4 @@
-const { Client, Intents, MessageActionRow } = require('discord.js');
+const { Client, Intents, MessageActionRow, MessageEmbed } = require('discord.js');
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 const PREFIX = "$";
@@ -11,7 +11,6 @@ const {
     statsCommand,
     tryCatchCommand,
     pokeballPrices,
-    em 
     } = require('./commands/commands');
 
 const pokemon = require('./pokemon.js');
@@ -41,6 +40,7 @@ client.on("message", async (message) => {
     const playerId = message.author.id;
     const Player = require('./models/Player');
     const Pokeball = require('./classes/Pokeball');
+    const Embed = new MessageEmbed();
 
     // HANDLE COMMANDS
     if(message.content.startsWith(PREFIX)){
@@ -57,14 +57,18 @@ client.on("message", async (message) => {
                 buyCommand(Player,Pokeball,message,playerId,args);
                 break;
             case 'stats':
-                statsCommand(Player,message,playerId);
+                statsCommand(Player,message,playerId,Embed);
                 break;
             case 'catch':
                 const newPokeball = new Pokeball(args[0])    
-                tryCatchCommand(pokemon,Player,message,playerId,newPokeball);          
+                tryCatchCommand(pokemon,Player,message,playerId,newPokeball,Embed);          
                 break;
             case 'prices':
                 pokeballPrices(message);
+                break;
+            case 'e':
+                
+
                 break;
             default:
                 break;
