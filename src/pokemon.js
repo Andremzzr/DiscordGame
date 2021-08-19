@@ -98,7 +98,9 @@ const pokeRequest = async () =>{
     }
 
    
-    
+    /**
+     * Get pokemons list
+     */
     const getPokemon = await axios.get(
         `https://pokeapi.co/api/v2/type/${generateType()}`
         ).then(total => {

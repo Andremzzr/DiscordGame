@@ -60,7 +60,7 @@ module.exports =  {
                         \n:softball: greatball: ${player[0].pokeballs[1]}
                         \n:basketball: master: ${player[0].pokeballs[2]}
                         \n:crystal_ball: ultra: ${player[0].pokeballs[3]}
-                        \n:no_entry: Pokemons : ${player[0].pokemons.map(pokemon => pokemon.name)}`)
+                        \n:no_entry: Pokemons :${player[0].pokemons.map(pokemon => ' ' + pokemon.name)}`)
                         .setTitle('Stats')
                         .setTimestamp()
 
@@ -99,6 +99,7 @@ module.exports =  {
                                 pokeRequest.name.includes('-') ? linkName = pokeRequest.name.split('-')[0] : linkName = pokeRequest.name;
 
                                 pokemonArray.push({name:pokeRequest.name, type: pokeRequest.type, shiny : pokeRequest.shiny})
+                                
                                 Embed.setThumbnail(pokeRequest.thumb)
                                 .setDescription(`Shiny: ${pokeRequest.shiny == undefined ? 'false' : pokeRequest.shiny}\nType: ${pokeRequest.type} ${pokeRequest.typeIcon}\n\n${pokeRequest.stats}`)
                                 .setTitle(pokeRequest.name)
@@ -116,11 +117,7 @@ module.exports =  {
                                 message.reply({ embeds: [Embed] });
                             }
                         )
-                    }
-
-                   
-
-                    
+                    } 
                 }
                 else{
                     message.reply('You dont have enough pokeballs');
@@ -130,9 +127,68 @@ module.exports =  {
         )
     },
 
-    pokeballPrices : (message) => message.reply(`normal: 10 pts\ngreat: 20 pts\nmaster: 25 pts\nultra: 150 pts`),
+    pokeballPrices : (message) => message.reply(`normal: 10 pts\ngreat: 20 pts\nmaster: 25 pts\nultra: 500 pts`),
 
-    
+    buycard : (pokemonName,message,Player,Embed) => {
+        Player.find({id: message.author.id})
+        .then(
+            player => {
+
+                let pokemonArray = [];
+                if(player[0].points < 500) {
+                    message.reply("You don't have enough points");
+                    return;
+                }
+                const pokemon = player[0].pokemons.map(pokemonIter => {
+                    
+                    pokemonIter.name.includes('-') ? pokemonIter.name = pokemonIter.name.split('-')[0] : pokemonIter.name = pokemonIter.name;
+                    if(pokemonIter.name == pokemonName){
+                        pokemonArray.push(pokemonName);    
+                    }
+                    
+                    }
+                )
+                
+                console.log(pokemonArray);
+                if(pokemonArray !== [] ){
+                    const card = require('../cards');
+                    card(pokemonName)
+                    .then(
+                        cardRequest=>{
+                            let cardsArray = player[0].cards;
+                            Embed
+                            .setTitle(cardRequest.name)
+                            .setImage(cardRequest.image)
+                            .setTimestamp()
+
+                            cardsArray.push({
+                                name : cardRequest.name,
+                                id : cardRequest.id,
+                                image : cardRequest.image
+                            });
+                            const points = player[0].points;
+
+
+                            Player.updateOne({id : message.author.id}, {
+                                cards : cardsArray,
+                                points : points - 500
+                             }, (err)=>{console.log("Player Updated")})
+
+                             message.reply({ embeds: [Embed] });
+
+                            
+                        }
+                    )
+
+                }
+                else{
+                    message.reply("You don't have this pokemon")
+                }
+            }
+        )
+        
+        
+    }
     
 
 }

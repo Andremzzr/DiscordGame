@@ -17,6 +17,10 @@ const PlayerSchema = new mongoose.Schema({
     pokemons: {
         type: Array,
         default: []
+    },
+    cards : {
+        type: Array,
+        default: []
     }
 });
 

@@ -11,6 +11,7 @@ const {
     statsCommand,
     tryCatchCommand,
     pokeballPrices,
+    buycard,
     } = require('./commands/commands');
 
 const pokemon = require('./pokemon.js');
@@ -66,6 +67,8 @@ client.on("message", async (message) => {
             case 'prices':
                 pokeballPrices(message);
                 break;
+            case 'buycard':
+                buycard(args[0],message,Player,Embed);  
             case 'e':
                 
 
