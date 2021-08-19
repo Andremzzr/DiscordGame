@@ -14,10 +14,7 @@ const PokemonSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    pokemonAbility: {
-        type: String,
-        required : true
-    }
+   
     
 });
 

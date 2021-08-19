@@ -51,9 +51,7 @@ module.exports =  {
                         message.reply("You're not registred yet :(")
                     }
                     else{
-
-                        embed
-                        .setThumbnail(message.author.avatarURL())
+                        embed.setThumbnail(message.author.avatarURL())
                         .setDescription(
                         `Player: ${message.author.username}
                         \n:coin: : ${player[0].points}
@@ -62,7 +60,7 @@ module.exports =  {
                         \n:softball: greatball: ${player[0].pokeballs[1]}
                         \n:basketball: master: ${player[0].pokeballs[2]}
                         \n:crystal_ball: ultra: ${player[0].pokeballs[3]}
-                        \n:no_entry: Pokemons : ${player[0].pokemons}`)
+                        \n:no_entry: Pokemons : ${player[0].pokemons.map(pokemon => pokemon.name)}`)
                         .setTitle('Stats')
                         .setTimestamp()
 
@@ -97,10 +95,14 @@ module.exports =  {
                         pokemon()
                         .then(
                             pokeRequest => {
-                                pokemonArray.push(pokeRequest.name)
-                                Embed.setColor(pokeRequest.color)
-                                .setDescription(`Type: ${pokeRequest.type} ${pokeRequest.typeIcon}\n\n${pokeRequest.stats}`)
+                                let linkName;
+                                pokeRequest.name.includes('-') ? linkName = pokeRequest.name.split('-')[0] : linkName = pokeRequest.name;
+
+                                pokemonArray.push({name:pokeRequest.name, type: pokeRequest.type, shiny : pokeRequest.shiny})
+                                Embed.setThumbnail(pokeRequest.thumb)
+                                .setDescription(`Shiny: ${pokeRequest.shiny == undefined ? 'false' : pokeRequest.shiny}\nType: ${pokeRequest.type} ${pokeRequest.typeIcon}\n\n${pokeRequest.stats}`)
                                 .setTitle(pokeRequest.name)
+                                .setURL(`https://www.pokemon.com/br/pokedex/${linkName}`)
                                 .setImage(pokeRequest.image)
                                 .setTimestamp()
 
