@@ -11,14 +11,14 @@ const PokemonSchema = new mongoose.Schema({
         required: true
     },
     pokemonId : {
-        type: Number,
+        type: String,
         required: true
     },
     pokemonName : {
         type: String,
         required: true
     },
-});
+},{collection: 'pokemon'});
 
 
 const Pokemon = mongoose.model('Pokemon', PokemonSchema);

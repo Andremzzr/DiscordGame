@@ -12,6 +12,7 @@ const {
     tryCatchCommand,
     pokeballPrices,
     buycard,
+    sellPokemon,
     } = require('./commands/commands');
 
 const pokemon = require('./pokemon.js');
@@ -29,7 +30,7 @@ mongoose.connect(db, {useNewUrlParser: true})
 
 client.once('ready', () => {
 	console.log(`Bot online: ${client.user.username}`);
-    console.log('---------------------------------')
+
 });
 
 
@@ -40,6 +41,7 @@ client.on("message", async (message) => {
 
     const playerId = message.author.id;
     const Player = require('./models/Player');
+    const Pokemon = require('./models/Pokemon');
     const Pokeball = require('./classes/Pokeball');
     const Embed = new MessageEmbed();
 
@@ -68,11 +70,12 @@ client.on("message", async (message) => {
                 pokeballPrices(message);
                 break;
             case 'buycard':
-                buycard(args[0],message,Player,Embed);  
-            case 'e':
-                
-
-                break;
+                buycard(args[0],message,Player,Embed);
+                break; 
+            case 'sellpokemon':
+                sellPokemon(Player,message,args[0],args[1],Pokemon);
+            case 'buypokemon':
+                buypokemon();    
             default:
                 break;
         }
