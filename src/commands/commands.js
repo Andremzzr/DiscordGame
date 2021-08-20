@@ -215,11 +215,6 @@ module.exports =  {
                     return pokemon.selling == false;
                  })
 
-        
-                
-                console.log(newPokemons)
-                console.log(sellingPokemons);
-
 
                 if(pokemon == ''){
                     message.reply("You don't have this pokemon")
@@ -243,6 +238,22 @@ module.exports =  {
                 }
             }
         )
+    },
+
+
+    market : (Pokemon,message) => {
+        Pokemon.find()
+        .then(
+            pokemon =>{
+                let mssg = ``;
+                pokemon.forEach(element => {
+                   mssg += `pokemon:${element.pokemonName}\nid: ${element.pokemonId}\nprice: ${element.pokemonPrice}\n\n`;
+                });
+
+                message.reply(mssg);
+            }
+        )
+        .catch(err => console.log(err));
     }
     
 
