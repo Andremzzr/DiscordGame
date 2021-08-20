@@ -234,7 +234,7 @@ module.exports =  {
 
                     Player.updateOne({id : message.author.id}, {
                         pokemons : newPokemons
-                     }, (err)=>{ message.reply(`Seu pokemon ${pokemonName} está a venda por ${price}!`)})
+                     }, (err)=>{ message.reply(`Your pokemon ${pokemonName} is on sale for ${price} pts!`)})
                 }
             }
         )
