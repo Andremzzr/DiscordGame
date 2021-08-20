@@ -128,7 +128,7 @@ module.exports =  {
         )
     },
 
-    pokeballPrices : (message) => message.reply(`normal: 10 pts\ngreat: 20 pts\nmaster: 25 pts\nultra: 500 pts\n card: 500 pts`),
+    pokeballPrices : (message) => message.reply(`normal: 10 pts\ngreat: 20 pts\nmaster: 25 pts\nultra: 500 pts\ncard: 500 pts`),
 
     buycard : (pokemonName,message,Player,Embed) => {
         Player.find({id: message.author.id})
@@ -140,23 +140,24 @@ module.exports =  {
                     message.reply("You don't have enough points");
                     return;
                 }
-                const pokemon = player[0].pokemons.map(pokemonIter => {
-                    
+                player[0].pokemons.map(pokemonIter => {
                     pokemonIter.name.includes('-') ? pokemonIter.name = pokemonIter.name.split('-')[0] : pokemonIter.name = pokemonIter.name;
                     if(pokemonIter.name == pokemonName){
                         pokemonArray.push(pokemonName);    
-                    }
-                    
+                    }   
                     }
                 )
                 
-                console.log(pokemonArray);
-                if(pokemonArray !== [] ){
+                if(pokemonArray == ''){
+                   message.reply('You dont have this pokemon')
+                }
+                else{
                     const card = require('../cards');
                     card(pokemonName)
                     .then(
                         cardRequest=>{
                             let cardsArray = player[0].cards;
+                            
                             Embed
                             .setTitle(cardRequest.name)
                             .setImage(cardRequest.image)
@@ -167,6 +168,7 @@ module.exports =  {
                                 id : cardRequest.id,
                                 image : cardRequest.image
                             });
+                            
                             const points = player[0].points;
 
 
@@ -176,14 +178,10 @@ module.exports =  {
                              }, (err)=>{console.log("Player Updated")})
 
                              message.reply({ embeds: [Embed] });
-
                             
                         }
                     )
 
-                }
-                else{
-                    message.reply("You don't have this pokemon")
                 }
             }
         )

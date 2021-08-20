@@ -6,6 +6,10 @@ const PokemonSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    pokemonPrice : {
+        type: Number,
+        required: true
+    },
     pokemonId : {
         type: Number,
         required: true
@@ -14,8 +18,6 @@ const PokemonSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-   
-    
 });
 
 
