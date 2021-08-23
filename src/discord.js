@@ -13,7 +13,8 @@ const {
     pokeballPrices,
     buycard,
     sellPokemon,
-    market
+    market,
+    buypokemon
     } = require('./commands/commands');
 
 const pokemon = require('./pokemon.js');
@@ -62,7 +63,7 @@ client.on("message", async (message) => {
                 break;
             case 'stats':
                 statsCommand(Player,message,playerId,Embed);
-                break;
+                break;  
             case 'catch':
                 const newPokeball = new Pokeball(args[0])    
                 tryCatchCommand(pokemon,Player,message,playerId,newPokeball,Embed);          
@@ -78,6 +79,9 @@ client.on("message", async (message) => {
                 break;
             case 'market':
                 market(Pokemon,message);
+                break;
+            case 'buypokemon':
+                buypokemon(message,Player,Pokemon,args[0]);
                 break;    
             default:
                 break;

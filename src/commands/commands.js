@@ -99,7 +99,11 @@ module.exports =  {
                                 let linkName;
                                 pokeRequest.name.includes('-') ? linkName = pokeRequest.name.split('-')[0] : linkName = pokeRequest.name;
 
-                                pokemonArray.push({name:pokeRequest.name, type: pokeRequest.type, shiny : pokeRequest.shiny, selling : false});
+                                let isShiny;
+                                if (pokeRequest.shiny == null){
+                                    isShiny = false;
+                                }
+                                pokemonArray.push({name:pokeRequest.name, type: pokeRequest.type, shiny : isShiny, selling : false, image: pokeRequest.image});
                                 
                                 Embed.setThumbnail(pokeRequest.thumb)
                                 .setDescription(`Shiny: ${pokeRequest.shiny == undefined ? 'false' : pokeRequest.shiny}\nType: ${pokeRequest.type} ${pokeRequest.typeIcon}\n\n${pokeRequest.stats}`)
@@ -147,7 +151,6 @@ module.exports =  {
                     }   
                     }
                 )
-                console.log(pokemon)
                 if(pokemon == undefined){
                    message.reply('You dont have this pokemon')
                 }
@@ -190,14 +193,16 @@ module.exports =  {
     },
 
     sellPokemon: (Player,message,pokemonName,price,Pokemon) =>{
+        if(price == undefined){
+            message.reply('The price is null');
+            return;
+        }
         Player.find({id: message.author.id})
         .then(
             player => {
                 let pokemon;
                 
-                player[0].pokemons.map(pokemonIter => {
-                    pokemonIter.name.includes('-') ? pokemonIter.name = pokemonIter.name.split('-')[0] : pokemonIter.name;
-                    
+                player[0].pokemons.map(pokemonIter => {                    
                     if(pokemonIter.name == pokemonName){
                         pokemon = pokemonName;
                         pokemonIter.selling = true;
@@ -219,13 +224,19 @@ module.exports =  {
                 if(pokemon == ''){
                     message.reply("You don't have this pokemon")
                 }
+
+                
+
                 else{
                     const id = Math.floor(Math.random() * 200)
                     const newPokemon = new Pokemon({
                         playerId : message.author.id,
                         pokemonPrice: parseInt(price),
                         pokemonId : `${id}#${message.author.username}`,
-                        pokemonName: sellingPokemons[0].name
+                        pokemonName: sellingPokemons[0].name,
+                        image : sellingPokemons[0].image,
+                        type:  sellingPokemons[0].type,
+                        shiny : sellingPokemons[0].shiny
                     });
 
                     newPokemon.save()
@@ -247,13 +258,68 @@ module.exports =  {
             pokemon =>{
                 let mssg = ``;
                 pokemon.forEach(element => {
-                   mssg += `pokemon:${element.pokemonName}\nid: ${element.pokemonId}\nprice: ${element.pokemonPrice}\n\n`;
+                   mssg += `pokemon: ${element.pokemonName}\nid: ${element.pokemonId}\n:coin: ${element.pokemonPrice}\n\n`;
                 });
 
-                message.reply(mssg);
+                if(mssg == ''){
+                    message.reply("There's no pokemon on the market")
+                    return;
+                }else{
+
+                    message.reply(mssg);
+                }
             }
         )
         .catch(err => console.log(err));
+    },
+
+    buypokemon : (message,Player,Pokemon,id) => {
+        Pokemon.find({pokemonId: id})
+        .then(
+            pokemon => {
+                Player.find({id: message.author.id})
+                .then(
+                    buyer => {
+                        if(buyer[0].points < pokemon[0].pokemonPrice){
+                            message.reply("You don't have enough points");
+                            return;
+                        }
+
+                        
+                        let pokemonArray = buyer[0].pokemons;
+                        pokemonArray.push({
+                            name: pokemon[0].pokemonName,
+                            type: pokemon[0].type,
+                            image: pokemon[0].image,
+                            shiny : pokemon[0].shiny,
+                            selling: false
+                        });
+
+                        const buyerPoints = buyer[0].points;
+                        
+                        Player.updateOne({id:message.author.id },{
+                            pokemons : pokemonArray,
+                            points : buyerPoints - pokemon[0].pokemonPrice
+                        }, err => message.reply(`You bought the ${pokemon[0].pokemonName}`));
+
+                        Player.find({id: pokemon[0].playerId})
+                        .then(
+                            receiver =>{
+                                
+                                const receiverPoints = receiver[0].points;
+                                Player.updateOne({id: pokemon[0].playerId},{
+                                    points: receiverPoints + pokemon[0].pokemonPrice
+                                },err => console.log(`Player ${pokemon[0].playerId} receive ${ pokemon[0].pokemonPrice} pts!`) );   
+
+                                Pokemon.deleteOne({pokemonId : id},err => console.log("Pokemon sold"))
+                            }
+                        )
+
+                        
+                    }
+                )
+            }
+        )
     }
     
 

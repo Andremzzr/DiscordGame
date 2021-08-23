@@ -18,6 +18,18 @@ const PokemonSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    shiny: {
+        type: Boolean,
+        required :true
+    },
+    image : {
+        type: String,
+        required: true
+    },
+    type: {
+        type: String,
+        required: true
+    }
 },{collection: 'pokemon'});
 
 
