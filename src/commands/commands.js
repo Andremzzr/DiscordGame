@@ -284,6 +284,11 @@ module.exports =  {
                             message.reply("You don't have enough points");
                             return;
                         }
+                        
+                        if(message.author.id == pokemon[0].playerId){
+                            message.reply("You can't buy this pokemon, you're the current owner!");
+                            return;
+                        }
 
                         
                         let pokemonArray = buyer[0].pokemons;
@@ -300,15 +305,15 @@ module.exports =  {
                         Player.updateOne({id:message.author.id },{
                             pokemons : pokemonArray,
                             points : buyerPoints - pokemon[0].pokemonPrice
-                        }, err => message.reply(`You bought the ${pokemon[0].pokemonName}`));
+                        }, err => message.reply(`You bought the ${pokemon[0].pokemonName} ${pokemon[0].pokemonId}`));
 
                         Player.find({id: pokemon[0].playerId})
                         .then(
-                            receiver =>{
+                            owner =>{
                                 
-                                const receiverPoints = receiver[0].points;
+                                const ownerPoints = owner[0].points;
                                 Player.updateOne({id: pokemon[0].playerId},{
-                                    points: receiverPoints + pokemon[0].pokemonPrice
+                                    points: ownerPoints + pokemon[0].pokemonPrice
                                 },err => console.log(`Player ${pokemon[0].playerId} receive ${ pokemon[0].pokemonPrice} pts!`) );   
 
                                 Pokemon.deleteOne({pokemonId : id},err => console.log("Pokemon sold"))
