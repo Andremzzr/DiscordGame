@@ -228,7 +228,7 @@ module.exports =  {
                 
 
                 else{
-                    const id = Math.floor(Math.random() * 200)
+                    const id = Math.floor(Math.random() * 999)
                     const newPokemon = new Pokemon({
                         playerId : message.author.id,
                         pokemonPrice: parseInt(price),

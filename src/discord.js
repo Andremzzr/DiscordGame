@@ -47,7 +47,8 @@ client.on("message", async (message) => {
     const Pokeball = require('./classes/Pokeball');
     const Embed = new MessageEmbed();
 
-    // HANDLE COMMANDS
+    if(message.channel.name == 'pokemon-area'){
+        // HANDLE COMMANDS
     if(message.content.startsWith(PREFIX)){
         const [CMD_NAME, ...args] = message.content
         .trim()
@@ -88,8 +89,9 @@ client.on("message", async (message) => {
         }
         
 
+        }
     }
-
+    
 
     //HANDLE NORMAL MESSAGES
     else{
