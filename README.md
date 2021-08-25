@@ -1,8 +1,9 @@
 ### This is a Discord Game using Pokemon api
 
 -To access all this commands you must create this text channel in your server:
-![Dev](https://cdn.discordapp.com/attachments/587446659835756546/880075344185557062/unknown.png)
 ##
+![Dev](https://cdn.discordapp.com/attachments/587446659835756546/880075344185557062/unknown.png)
+
 -Here you can catch pokemons:
 ##
 ![Dev](https://media.discordapp.net/attachments/587446659835756546/878327661783580752/unknown.png)
