@@ -48,7 +48,8 @@ client.on("message", async (message) => {
     const Embed = new MessageEmbed();
 
     if(message.channel.name == 'pokemon-area'){
-        // HANDLE COMMANDS
+    
+    // HANDLE COMMANDS
     if(message.content.startsWith(PREFIX)){
         const [CMD_NAME, ...args] = message.content
         .trim()

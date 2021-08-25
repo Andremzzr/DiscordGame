@@ -13,6 +13,10 @@ module.exports =  {
             .catch(err => console.log(err))
     },
     buyCommand : (Player,Pokeball,message,playerId,args) => {
+        if(Number.isInteger(args[1]) == true){
+            message.reply("The pokeballs name is invalid");
+            return;
+        }
         const newPokeball = new Pokeball(args[1]);
         
         Player.find({id: playerId})
@@ -32,10 +36,13 @@ module.exports =  {
                         pokeballs: playerPokeBalls 
                         
                         }, (err)=>{
-                            message.reply(`You bougth ${args[0]} pokeballs ${args[1]} :baseball:`)
                             if(err){
+                                message.reply("An error occured, try to fill the right arguments");
                                 console.log(err);
+                                return;
                             }
+
+                            message.reply(`You bougth ${args[0]} pokeballs ${args[1]} :baseball:`);
                         }
                     )
                     .then(player => console.log(`Player ${playerId} updated`));     
@@ -195,6 +202,10 @@ module.exports =  {
     sellPokemon: (Player,message,pokemonName,price,Pokemon) =>{
         if(price == undefined){
             message.reply('The price is null');
+            return;
+        }
+        else if(Number.isInteger(price) == false){
+            message.reply("You need to fill with a real price");
             return;
         }
         Player.find({id: message.author.id})
