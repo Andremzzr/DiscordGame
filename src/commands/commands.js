@@ -1,6 +1,6 @@
 module.exports =  {
     commandPoints : (Player, message, playerId) => {
-        Player.find({id : playerId})
+        Player.find({playerId : playerId})
             .then(player => {
                 if(player.length > 0){
                     message.reply(`You have ${player[0].points} points`);
@@ -19,18 +19,18 @@ module.exports =  {
         }
         const newPokeball = new Pokeball(args[1]);
         
-        Player.find({id: playerId})
+        Player.findOne({playerId: playerId})
         .then(  
             player => {
-                const playerPoints = player[0].points;
-                let playerPokeBalls= player[0].pokeballs;
+                const playerPoints = player.points;
+                let playerPokeBalls= player.pokeballs;
                 playerPokeBalls[newPokeball.getIndex()]+= parseInt(args[0]);
 
                 if(playerPoints < args[0] * newPokeball.getPrice()){
                     message.reply("You don't have enough points");
                 }  
                 else{
-                    Player.updateOne({id : playerId}, {
+                    Player.updateOne({playerId : playerId}, {
                         
                         points : playerPoints - (args[0] * newPokeball.getPrice()),
                         pokeballs: playerPokeBalls 
@@ -51,7 +51,7 @@ module.exports =  {
         )
     },
     statsCommand : (Player,message,playerId,embed) => {
-        Player.find({id : playerId})
+        Player.find({playerId : playerId})
             .then(
                 player => {
                     if(player.length == 0){
@@ -83,18 +83,18 @@ module.exports =  {
 
     tryCatchCommand : (pokemon,Player,message,playerId,newPokeball,Embed) => {
     
-        Player.find({id: playerId})
+        Player.findOne({playerId: playerId})
         .then(
             player => {
                 const index = newPokeball.getIndex();
-                let pokemonArray = player[0].pokemons;
-                let pokeballs = player[0].pokeballs;
+                let pokemonArray = player.pokemons;
+                let pokeballs = player.pokeballs;
             
                 if(pokeballs[index] > 0){
                     if(Math.floor(Math.random() * (100) + 1) >= newPokeball.getChance()){
                         pokeballs[index]-= 1;
                         message.reply("Oh, the pokemon runned away :(");
-                        Player.updateOne({id : playerId}, {
+                        Player.updateOne({playerId : playerId}, {
                             pokeballs : pokeballs,
                             pokemons : pokemonArray
                          }, (err)=>{console.log("PlayerUpdated")})
@@ -121,7 +121,7 @@ module.exports =  {
 
                                 pokeballs[index]-= 1;
 
-                                Player.updateOne({id : playerId}, {
+                                Player.updateOne({playerId : playerId}, {
                                     pokeballs : pokeballs,
                                     pokemons : pokemonArray
                                  }, (err)=>{console.log("PlayerUpdated")})
@@ -142,16 +142,16 @@ module.exports =  {
     pokeballPrices : (message) => message.reply(`normal: 10 pts\ngreat: 20 pts\nmaster: 25 pts\nultra: 500 pts\ncard: 500 pts`),
 
     buycard : (pokemonName,message,Player,Embed) => {
-        Player.find({id: message.author.id})
+        Player.findOne({playerId: message.author.id})
         .then(
             player => {
 
                 let pokemon;
-                if(player[0].points < 500) {
+                if(player.points < 500) {
                     message.reply("You don't have enough points");
                     return;
                 }
-                player[0].pokemons.map(pokemonIter => {
+                player.pokemons.map(pokemonIter => {
                     pokemonIter.name.includes('-') ? pokemonIter.name = pokemonIter.name.split('-')[0] : pokemonIter.name = pokemonIter.name;
                     if(pokemonIter.name == pokemonName){
                         pokemon = pokemonName;    
@@ -166,7 +166,7 @@ module.exports =  {
                     card(pokemonName)
                     .then(
                         cardRequest=>{
-                            let cardsArray = player[0].cards;
+                            let cardsArray = player.cards;
                             
                             Embed
                             .setTitle(cardRequest.name)
@@ -179,10 +179,10 @@ module.exports =  {
                                 image : cardRequest.image
                             });
                             
-                            const points = player[0].points;
+                            const points = player.points;
 
 
-                            Player.updateOne({id : message.author.id}, {
+                            Player.updateOne({playerId : message.author.id}, {
                                 cards : cardsArray,
                                 points : points - 500
                              }, (err)=>{console.log("Player Updated")})

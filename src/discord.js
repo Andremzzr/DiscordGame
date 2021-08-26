@@ -24,7 +24,7 @@ const mongoose = require('mongoose');
 const db =require('./config/key').MongoUri;
 
 //CONNECT TO MONGO
-mongoose.connect(db, {useNewUrlParser: true})
+mongoose.connect(db, {useNewUrlParser: true, useUnifiedTopology: true})
 .then(() => console.log('MongoDb connected'))
 .catch((err) => console.log(err));
 
@@ -96,24 +96,24 @@ client.on("message", async (message) => {
 
     //HANDLE NORMAL MESSAGES
     else{
-        Player.find({id : playerId})
+        Player.find({playerId : playerId})
         .then(
             player => {
                 //CREATING PLAYER IN DOCUMENT
                 if(player <= 0){
                     const newPlayer = new Player({
-                        id: playerId,
+                        playerId: playerId,
                         points : message.content.length,
                     });
 
                     newPlayer.save()
                     .then( player => console.log(`Player: ${player}`))
-                    .catch(err => console.lgo(err));
+                    .catch(err => console.log(err));
                 }
                 
                 //UPDATING PLAYER DATA
                 else{
-                    Player.updateOne({id : playerId}, {
+                    Player.updateOne({playerId : playerId}, {
                         points : player[0].points + message.content.length
                         }, (err)=>{
                             if(err){
