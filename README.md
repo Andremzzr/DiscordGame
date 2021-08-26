@@ -21,5 +21,7 @@
 ![Dev](https://media.discordapp.net/attachments/587446659835756546/878328592797433976/unknown.png)
 
 ##
+-Buy Pokemons: 
+##
+![Dev](https://media.discordapp.net/attachments/587446659835756546/878328592797433976/unknown.png)
 
-- For my next step, I'll create a buy pokemon mechanic and a website for a better visualization of your data;

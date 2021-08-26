@@ -204,15 +204,16 @@ module.exports =  {
             message.reply('The price is null');
             return;
         }
-        else if(Number.isInteger(price) == false){
+        else if(Number.isInteger(parseInt(price)) == false){
             message.reply("You need to fill with a real price");
             return;
         }
-        Player.find({id: message.author.id})
+
+        Player.find({playerId: message.author.id})
         .then(
             player => {
                 let pokemon;
-                
+                console.log(player);
                 player[0].pokemons.map(pokemonIter => {                    
                     if(pokemonIter.name == pokemonName){
                         pokemon = pokemonName;
