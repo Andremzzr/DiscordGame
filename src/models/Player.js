@@ -6,6 +6,14 @@ const PlayerSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    icon: {
+        type: String,
+        required: true
+    },
+    tag:{
+        type: String,
+        required: true
+    },
     points : {
         type: Number,
         required : true

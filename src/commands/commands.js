@@ -12,6 +12,15 @@ module.exports =  {
             })
             .catch(err => console.log(err))
     },
+    /**
+     * Buys a pokeball
+     * @param {Model} Player 
+     * @param {Model} Pokeball 
+     * @param {Object} message 
+     * @param {String} playerId 
+     * @param {Array} args 
+     * @returns 
+     */
     buyCommand : (Player,Pokeball,message,playerId,args) => {
         if(Number.isInteger(args[1]) == true){
             message.reply("The pokeballs name is invalid");
@@ -50,6 +59,13 @@ module.exports =  {
             }
         )
     },
+    /**
+     * Send the Player's stats
+     * @param {Model} Player 
+     * @param {Object} message 
+     * @param {String} playerId 
+     * @param {Object} embed 
+     */
     statsCommand : (Player,message,playerId,embed) => {
         Player.find({playerId : playerId})
             .then(
@@ -81,6 +97,15 @@ module.exports =  {
             )
     },
 
+    /**
+     * Player try to catch a pokemon
+     * @param {String} pokemon 
+     * @param {Model} Player 
+     * @param {Object} message 
+     * @param {String} playerId 
+     * @param {Class} newPokeball 
+     * @param {Object} Embed 
+     */
     tryCatchCommand : (pokemon,Player,message,playerId,newPokeball,Embed) => {
     
         Player.findOne({playerId: playerId})
@@ -141,6 +166,13 @@ module.exports =  {
 
     pokeballPrices : (message) => message.reply(`normal: 10 pts\ngreat: 20 pts\nmaster: 25 pts\nultra: 500 pts\ncard: 500 pts`),
 
+    /**
+     * Player buys a card from a pokemon in their bag
+     * @param {String} pokemonName 
+     * @param {Object} message 
+     * @param {Model} Player 
+     * @param {Object} Embed 
+     */
     buycard : (pokemonName,message,Player,Embed) => {
         Player.findOne({playerId: message.author.id})
         .then(
@@ -199,6 +231,15 @@ module.exports =  {
         
     },
 
+    /**
+     * Player sells his pokemon
+     * @param {Model} Player 
+     * @param {Object} message 
+     * @param {String} pokemonName 
+     * @param {Integer} price 
+     * @param {Model} Pokemon 
+     * @returns 
+     */
     sellPokemon: (Player,message,pokemonName,price,Pokemon) =>{
         if(price == undefined){
             message.reply('The price is null');
@@ -285,6 +326,13 @@ module.exports =  {
         .catch(err => console.log(err));
     },
 
+    /**
+     * Player buys a pokemon from the market
+     * @param {Object} message 
+     * @param {Model} Player 
+     * @param {Model} Pokemon 
+     * @param {String} id 
+     */
     buypokemon : (message,Player,Pokemon,id) => {
         Pokemon.find({pokemonId: id})
         .then(

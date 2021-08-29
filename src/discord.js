@@ -93,7 +93,7 @@ client.on("message", async (message) => {
         }
     }
     
-
+    
     //HANDLE NORMAL MESSAGES
     else{
         Player.find({playerId : playerId})
@@ -103,6 +103,8 @@ client.on("message", async (message) => {
                 if(player <= 0){
                     const newPlayer = new Player({
                         playerId: playerId,
+                        icon: message.author.avatar,
+                        tag: message.author.tag,
                         points : message.content.length,
                     });
 
