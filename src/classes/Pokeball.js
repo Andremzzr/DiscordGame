@@ -15,11 +15,11 @@ module.exports = class Pokeball{
             case 'great':
                 return 20;
             
-            case 'master': 
+            case 'ultra': 
                 return 25;
 
-            case 'ultra':
-                return 500
+            case 'master':
+                return 400
 
             default:
                 break;
@@ -34,10 +34,10 @@ module.exports = class Pokeball{
             case 'great':
                 return 24;
             
-            case 'master': 
+            case 'ultra': 
                 return 30;
 
-            case 'ultra':
+            case 'master':
                 return 90;
 
             default:
@@ -51,9 +51,9 @@ module.exports = class Pokeball{
                 return  0;
             case 'great':
                 return  1;
-            case 'master':
-                return  2;
             case 'ultra':
+                return  2;
+            case 'master':
                 return  3;
             default:
                 break;

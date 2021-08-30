@@ -15,7 +15,7 @@ const {
     sellPokemon,
     market,
     buypokemon
-    } = require('./commands/commands');
+    } = require('./methods/commands');
 
 const pokemon = require('./pokemon.js');
 const mongoose = require('mongoose');
@@ -44,7 +44,9 @@ client.on("message", async (message) => {
     const playerId = message.author.id;
     const Player = require('./models/Player');
     const Pokemon = require('./models/Pokemon');
+    const Comment = require('./models/Comment');
     const Pokeball = require('./classes/Pokeball');
+
     const Embed = new MessageEmbed();
 
     if(message.channel.name == 'pokemon-area'){
@@ -108,23 +110,42 @@ client.on("message", async (message) => {
                         points : message.content.length,
                     });
 
+                    const newComment = new Comment({
+                        playerId: playerId,
+                        lastComment: new Date()
+                    })
                     newPlayer.save()
-                    .then( player => console.log(`Player: ${player}`))
+                    .then( player => {
+                        console.log(`Player: ${player}`)
+
+                        newComment.save()
+                        .then(comment => console.log(`Comment: ${comment}`))
+                        .catch(err => console.log(err));
+                    })
                     .catch(err => console.log(err));
                 }
                 
                 //UPDATING PLAYER DATA
                 else{
-                    Player.updateOne({playerId : playerId}, {
-                        points : player[0].points + message.content.length
-                        }, (err)=>{
-                            if(err){
-                                console.log(err);
-                            }
+                    Comment.findOne({playerId: playerId})
+                    .then(
+                        comment => {
+                            const now = new Date();
+                            if(now - comment.lastComment < 30000) return;
+
+                            Player.updateOne({playerId : playerId}, {
+                                points : player[0].points + message.content.length
+                                }, (err)=>{ if(err)console.log(err)}
+                            );
+                                
+                            Comment.updateOne({playerId: playerId},{
+                                lastComment : now
+                            }, (err)=>{ if(err)console.log(err)});
+                            
+                            
                         }
                     )
-                                               
-                    
+    
                 }
             }
         )

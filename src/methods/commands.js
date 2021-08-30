@@ -81,9 +81,9 @@ module.exports =  {
                         \nPokeballs:
                         \n:baseball: normal: ${player[0].pokeballs[0]}
                         \n:softball: greatball: ${player[0].pokeballs[1]}
-                        \n:basketball: master: ${player[0].pokeballs[2]}
-                        \n:crystal_ball: ultra: ${player[0].pokeballs[3]}
-                        \n:no_entry: Pokemons :${player[0].pokemons.map(pokemon => ' ' + pokemon.name)}
+                        \n:basketball: ultra: ${player[0].pokeballs[2]}
+                        \n:crystal_ball: master: ${player[0].pokeballs[3]}
+                        \n:no_entry: Pokemons :${player[0].pokemons.map(pokemon => pokemon.shiny == true ? ' ' + pokemon.name + '(Shiny)' : ' '+ pokemon.name )}
                         \n:black_joker: Cards :${player[0].cards.map(card => ' ' + card.name)}`)
                         .setTitle('Stats')
                         .setTimestamp()
@@ -169,7 +169,7 @@ module.exports =  {
         )
     },
 
-    pokeballPrices : (message) => message.reply(`normal: 10 pts\ngreat: 20 pts\nmaster: 25 pts\nultra: 500 pts\ncard: 500 pts`),
+    pokeballPrices : (message) => message.reply(`normal: 10 pts\ngreat: 20 pts\nultra: 25 pts\nmaster: 400 pts\ncard: 500 pts`),
 
     /**
      * Player buys a card from a pokemon in their bag
