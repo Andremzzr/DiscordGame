@@ -264,23 +264,23 @@ module.exports =  {
                     }
                 )
 
-
-                let sellingPokemons=  player[0].pokemons.filter(pokemon => {
-                   return pokemon.selling == true;
-                })
-
-                let newPokemons = player[0].pokemons.filter(pokemon => {
-                    return pokemon.selling == false;
-                 })
-
-
-                if(pokemon == ''){
+                if(pokemon == undefined){
                     message.reply("You don't have this pokemon")
+                    return;
                 }
 
                 
 
                 else{
+                    let sellingPokemons=  player[0].pokemons.filter(pokemon => {
+                        return pokemon.selling == true;
+                     })
+     
+                     let newPokemons = player[0].pokemons.filter(pokemon => {
+                         return pokemon.selling == false;
+                      })
+
+
                     const id = Math.floor(Math.random() * 999)
                     const newPokemon = new Pokemon({
                         playerId : message.author.id,
