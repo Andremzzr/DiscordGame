@@ -131,10 +131,15 @@ module.exports =  {
                                 let linkName;
                                 pokeRequest.name.includes('-') ? linkName = pokeRequest.name.split('-')[0] : linkName = pokeRequest.name;
 
+                                
                                 let isShiny;
                                 if (pokeRequest.shiny == null){
                                     isShiny = false;
                                 }
+                                else{
+                                    isShiny = true;
+                                }
+                                console.log('shiny: '+ isShiny)
                                 pokemonArray.push({name:pokeRequest.name, type: pokeRequest.type, shiny : isShiny, selling : false, image: pokeRequest.image});
                                 
                                 Embed.setThumbnail(pokeRequest.thumb)

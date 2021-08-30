@@ -27,7 +27,7 @@ const pokeRequest = async () =>{
     const typesEmoji = require('./emoji');
     const statsEmoji = require('./statsemoji');
 
-
+    
     const getEmoji = type => {
         for (const key of Object.keys(typesEmoji)) {
             if(type == [key]){
