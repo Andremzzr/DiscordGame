@@ -41,8 +41,15 @@ module.exports = {
                 const now = new Date();
                 if(now - comment.lastComment < 30000) return;
 
+                let newPoints;
+                message.attachments.size > 0 ?  newPoints = player[0].points + message.content.length + 20 : newPoints = player[0].points + message.content.length; 
+                 
+                
+                
+
+                
                 Player.updateOne({playerId : playerId}, {
-                    points : player[0].points + message.content.length
+                    points : newPoints
                     }, (err)=>{ if(err)console.log(err)}
                 );
                     
