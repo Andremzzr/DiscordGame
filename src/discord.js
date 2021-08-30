@@ -17,6 +17,11 @@ const {
     buypokemon
     } = require('./methods/commands');
 
+const {
+    createNewUser, 
+    updateUser
+} = require('./methods/normalMessage');
+
 const pokemon = require('./pokemon.js');
 const mongoose = require('mongoose');
 
@@ -103,48 +108,12 @@ client.on("message", async (message) => {
             player => {
                 //CREATING PLAYER IN DOCUMENT
                 if(player <= 0){
-                    const newPlayer = new Player({
-                        playerId: playerId,
-                        icon: message.author.avatar,
-                        tag: message.author.tag,
-                        points : message.content.length,
-                    });
-
-                    const newComment = new Comment({
-                        playerId: playerId,
-                        lastComment: new Date()
-                    })
-                    newPlayer.save()
-                    .then( player => {
-                        console.log(`Player: ${player}`)
-
-                        newComment.save()
-                        .then(comment => console.log(`Comment: ${comment}`))
-                        .catch(err => console.log(err));
-                    })
-                    .catch(err => console.log(err));
+                    createNewUser(Player,Comment, playerId,message);
                 }
                 
                 //UPDATING PLAYER DATA
                 else{
-                    Comment.findOne({playerId: playerId})
-                    .then(
-                        comment => {
-                            const now = new Date();
-                            if(now - comment.lastComment < 30000) return;
-
-                            Player.updateOne({playerId : playerId}, {
-                                points : player[0].points + message.content.length
-                                }, (err)=>{ if(err)console.log(err)}
-                            );
-                                
-                            Comment.updateOne({playerId: playerId},{
-                                lastComment : now
-                            }, (err)=>{ if(err)console.log(err)});
-                            
-                            
-                        }
-                    )
+                    updateUser(Player,Comment, playerId,player,message);
     
                 }
             }
