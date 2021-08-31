@@ -259,7 +259,7 @@ module.exports =  {
         .then(
             player => {
                 let pokemon;
-                console.log(player);
+                
                 player[0].pokemons.map(pokemonIter => {                    
                     if(pokemonIter.name == pokemonName){
                         pokemon = pokemonName;
@@ -290,7 +290,7 @@ module.exports =  {
                     const newPokemon = new Pokemon({
                         playerId : message.author.id,
                         pokemonPrice: parseInt(price),
-                        pokemonId : `${id}#${message.author.username}`,
+                        pokemonId : `${id}_${message.author.username}`,
                         pokemonName: sellingPokemons[0].name,
                         image : sellingPokemons[0].image,
                         type:  sellingPokemons[0].type,
@@ -301,7 +301,7 @@ module.exports =  {
                     .then(pokemon => console.log(`Pokemon saved: ${pokemon.pokemonId}`))
                     .catch(err => console.log(`Error: ${err}`));
 
-                    Player.updateOne({id : message.author.id}, {
+                    Player.updateOne({playerId : message.author.id}, {
                         pokemons : newPokemons
                      }, (err)=>{ message.reply(`Your pokemon ${pokemonName} is on sale for ${price} pts!`)})
                 }
@@ -342,7 +342,7 @@ module.exports =  {
         Pokemon.find({pokemonId: id})
         .then(
             pokemon => {
-                Player.find({id: message.author.id})
+                Player.find({playerId: message.author.id})
                 .then(
                     buyer => {
                         if(buyer[0].points < pokemon[0].pokemonPrice){
@@ -367,17 +367,17 @@ module.exports =  {
 
                         const buyerPoints = buyer[0].points;
                         
-                        Player.updateOne({id:message.author.id },{
+                        Player.updateOne({playerId:message.author.id},{
                             pokemons : pokemonArray,
                             points : buyerPoints - pokemon[0].pokemonPrice
                         }, err => message.reply(`You bought the ${pokemon[0].pokemonName} ${pokemon[0].pokemonId}`));
 
-                        Player.find({id: pokemon[0].playerId})
+                        Player.find({playerId: pokemon[0].playerId})
                         .then(
                             owner =>{
                                 
                                 const ownerPoints = owner[0].points;
-                                Player.updateOne({id: pokemon[0].playerId},{
+                                Player.updateOne({playerId: pokemon[0].playerId},{
                                     points: ownerPoints + pokemon[0].pokemonPrice
                                 },err => console.log(`Player ${pokemon[0].playerId} receive ${ pokemon[0].pokemonPrice} pts!`) );   
 
