@@ -63,7 +63,7 @@ client.on("message", async (message) => {
         .substring(PREFIX.length)
         .split(/\s+/);
 
-        switch (CMD_NAME) {
+        switch (CMD_NAME.toLocaleLowerCase()) {
             case 'points':
                 commandPoints(Player, message,playerId);
                 break;
