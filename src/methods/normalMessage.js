@@ -43,21 +43,30 @@ module.exports = {
 
                 let newPoints;
                 message.attachments.size > 0 ?  newPoints = player[0].points + message.content.length + 20 : newPoints = player[0].points + message.content.length; 
-                 
                 
                 
+                if(message.author.avatar != player.icon){
+                    Player.updateOne({playerId : playerId}, {
+                        points : newPoints,
+                        icon: message.author.avatar
+                        }, (err)=>{ if(err)console.log(err)}
+                    );
+                        
+                    Comment.updateOne({playerId: playerId},{
+                        lastComment : now
+                    }, (err)=>{ if(err)console.log(err)});
+                }
+                else{
+                    Player.updateOne({playerId : playerId}, {
+                        points : newPoints
+                        }, (err)=>{ if(err)console.log(err)}
+                    );
+                        
+                    Comment.updateOne({playerId: playerId},{
+                        lastComment : now
+                    }, (err)=>{ if(err)console.log(err)});
+                }
 
-                
-                Player.updateOne({playerId : playerId}, {
-                    points : newPoints
-                    }, (err)=>{ if(err)console.log(err)}
-                );
-                    
-                Comment.updateOne({playerId: playerId},{
-                    lastComment : now
-                }, (err)=>{ if(err)console.log(err)});
-                
-                
             }
         )
     }

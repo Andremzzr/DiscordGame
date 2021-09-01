@@ -37,14 +37,17 @@ const pokeRequest = async () =>{
     }
 
    
-
+    /**
+     * Generates random pokemon type 
+     * @returns integer
+     */
     function generateType(){
         let count = 1;
         let max = Math.floor(Math.random() * (18 - 1) + 1);
         for (const key of Object.keys(pokemonTypes)) {
             if(count == max){
                 Icon = getEmoji(key);
-                return pokemonTypes[key]
+                return pokemonTypes[key];
             }
             count++;
         }
@@ -58,7 +61,7 @@ const pokeRequest = async () =>{
                     return true;
                 }
                 else{
-                    return false
+                    return false;
                 }
             }
         }
