@@ -1,4 +1,5 @@
 module.exports =  {
+
     commandPoints : (Player, message, playerId) => {
         Player.find({playerId : playerId})
             .then(player => {
@@ -12,6 +13,7 @@ module.exports =  {
             })
             .catch(err => console.log(err))
     },
+
     /**
      * Buys a pokeball
      * @param {Model} Player 
@@ -139,11 +141,18 @@ module.exports =  {
                                 else{
                                     isShiny = true;
                                 }
-                                console.log('shiny: '+ isShiny)
-                                pokemonArray.push({name:pokeRequest.name, type: pokeRequest.type, shiny : isShiny, selling : false, image: pokeRequest.image});
+                                
+                                const id = Math.floor(Math.random() * 999);
+                                pokemonArray.push(
+                                    {name:pokeRequest.name,
+                                    type: pokeRequest.type,
+                                    shiny : isShiny, 
+                                    selling : false, 
+                                    pokemonId: `${id}_${message.author.username}`,
+                                    image: pokeRequest.image});
                                 
                                 Embed.setThumbnail(pokeRequest.thumb)
-                                .setDescription(`Shiny: ${pokeRequest.shiny == undefined ? 'false' : pokeRequest.shiny}\nType: ${pokeRequest.type} ${pokeRequest.typeIcon}\n\n${pokeRequest.stats}`)
+                                .setDescription(`Shiny: ${pokeRequest.shiny == undefined ? 'false' : pokeRequest.shiny}\nType: ${pokeRequest.type} ${pokeRequest.typeIcon}\n\n${pokeRequest.stats}\nId: ${id}_${message.author.username}`)
                                 .setTitle(pokeRequest.name)
                                 .setURL(`https://www.pokemon.com/br/pokedex/${linkName}`)
                                 .setImage(pokeRequest.image)
@@ -286,11 +295,11 @@ module.exports =  {
                       })
 
 
-                    const id = Math.floor(Math.random() * 999)
+                    
                     const newPokemon = new Pokemon({
                         playerId : message.author.id,
                         pokemonPrice: parseInt(price),
-                        pokemonId : `${id}_${message.author.username}`,
+                        pokemonId : pokemon.pokemonId,
                         pokemonName: sellingPokemons[0].name,
                         image : sellingPokemons[0].image,
                         type:  sellingPokemons[0].type,
