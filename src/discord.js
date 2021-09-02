@@ -107,7 +107,7 @@ client.on("message", async (message) => {
         .then(
             player => {
                 //CREATING PLAYER IN DOCUMENT
-                if(player <= 0){
+                if(player <= 0){    
                     createNewUser(Player,Comment, playerId,message);
                 }
                 

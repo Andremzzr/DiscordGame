@@ -85,7 +85,7 @@ module.exports =  {
                         \n:softball: greatball: ${player[0].pokeballs[1]}
                         \n:basketball: ultra: ${player[0].pokeballs[2]}
                         \n:crystal_ball: master: ${player[0].pokeballs[3]}
-                        \n:no_entry: Pokemons :${player[0].pokemons.map(pokemon => pokemon.shiny == true ? ' ' + pokemon.name + '(Shiny)' : ' '+ pokemon.name )}
+                        \n:no_entry: Pokemons :${player[0].pokemons.map(pokemon => pokemon.shiny == true ? pokemon.pokemonId + ': ' + pokemon.name + '(Shiny)\n' : pokemon.pokemonId + ': '+ pokemon.name + '\n')}
                         \n:black_joker: Cards :${player[0].cards.map(card => ' ' + card.name)}`)
                         .setTitle('Stats')
                         .setTimestamp()
@@ -254,7 +254,7 @@ module.exports =  {
      * @param {Model} Pokemon 
      * @returns 
      */
-    sellPokemon: (Player,message,pokemonName,price,Pokemon) =>{
+    sellPokemon: (Player,message,pokemonId,price,Pokemon) =>{
         if(price == undefined){
             message.reply('The price is null');
             return;
@@ -267,18 +267,19 @@ module.exports =  {
         Player.find({playerId: message.author.id})
         .then(
             player => {
-                let pokemon;
+                let pokemonInsertId;
                 
                 player[0].pokemons.map(pokemonIter => {                    
-                    if(pokemonIter.name == pokemonName){
-                        pokemon = pokemonName;
+                    if(pokemonIter.pokemonId == pokemonId){
+                        pokemonInsertId = pokemonId;
                         pokemonIter.selling = true;
-                        
+
                     } 
                     }
                 )
 
-                if(pokemon == undefined){
+                
+                if(pokemonInsertId == undefined){
                     message.reply("You don't have this pokemon")
                     return;
                 }
@@ -290,16 +291,18 @@ module.exports =  {
                         return pokemon.selling == true;
                      })
      
-                     let newPokemons = player[0].pokemons.filter(pokemon => {
+                    let newPokemons = player[0].pokemons.filter(pokemon => {
                          return pokemon.selling == false;
-                      })
+                    })
 
+                    const pokemonObj = player[0].pokemons.filter(pokemon=> pokemon.pokemonId == pokemonInsertId);
+                    console.log(pokemonObj);
 
                     
                     const newPokemon = new Pokemon({
                         playerId : message.author.id,
                         pokemonPrice: parseInt(price),
-                        pokemonId : pokemon.pokemonId,
+                        pokemonId : pokemonObj[0].pokemonId,
                         pokemonName: sellingPokemons[0].name,
                         image : sellingPokemons[0].image,
                         type:  sellingPokemons[0].type,
@@ -312,7 +315,7 @@ module.exports =  {
 
                     Player.updateOne({playerId : message.author.id}, {
                         pokemons : newPokemons
-                     }, (err)=>{ message.reply(`Your pokemon ${pokemonName} is on sale for ${price} pts!`)})
+                     }, (err)=>{ message.reply(`Your pokemon ${sellingPokemons[0].name} is on sale for ${price} pts!`)})
                 }
             }
         )
