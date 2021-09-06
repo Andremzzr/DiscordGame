@@ -143,13 +143,15 @@ module.exports =  {
                                 }
                                 
                                 const id = Math.floor(Math.random() * 999);
-                                pokemonArray.push(
-                                    {name:pokeRequest.name,
+                                const newPokemon = {
+                                    playerId : message.author.id,
+                                    name:pokeRequest.name,
                                     type: pokeRequest.type,
                                     shiny : isShiny, 
                                     selling : false, 
                                     pokemonId: `${id}_${message.author.username}`,
-                                    image: pokeRequest.image});
+                                    image: pokeRequest.image};
+                                pokemonArray.push(newPokemon);
                                 
                                 Embed.setThumbnail(pokeRequest.thumb)
                                 .setDescription(`Shiny: ${pokeRequest.shiny == undefined ? 'false' : pokeRequest.shiny}\nType: ${pokeRequest.type} ${pokeRequest.typeIcon}\n\n${pokeRequest.stats}\nId: ${id}_${message.author.username}`)
@@ -163,7 +165,7 @@ module.exports =  {
                                 Player.updateOne({playerId : playerId}, {
                                     pokeballs : pokeballs,
                                     pokemons : pokemonArray
-                                 }, (err)=>{console.log("PlayerUpdated")})
+                                 }, (err)=>{console.log(`${message.author.id} updated: ${newPokemon}`)})
 
                                 message.reply({ embeds: [Embed] });
                             }
