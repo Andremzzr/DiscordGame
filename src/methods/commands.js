@@ -85,7 +85,7 @@ module.exports =  {
                         \n:softball: greatball: ${player[0].pokeballs[1]}
                         \n:basketball: ultra: ${player[0].pokeballs[2]}
                         \n:crystal_ball: master: ${player[0].pokeballs[3]}
-                        \n:no_entry: Pokemons :${player[0].pokemons.map(pokemon => pokemon.shiny == true ? pokemon.pokemonId + ': ' + pokemon.name + '(Shiny)\n' : pokemon.pokemonId + ': '+ pokemon.name + '\n')}
+                        \n:no_entry: Pokemons: \n${player[0].pokemons.map(pokemon => pokemon.shiny == true ? pokemon.pokemonId + '=> ' + pokemon.name + '(Shiny)\n' : pokemon.pokemonId + '=> '+ pokemon.name + '\n')}
                         \n:black_joker: Cards :${player[0].cards.map(card => ' ' + card.name)}`)
                         .setTitle('Stats')
                         .setTimestamp()
@@ -144,7 +144,6 @@ module.exports =  {
                                 
                                 const id = Math.floor(Math.random() * 999);
                                 const newPokemon = {
-                                    playerId : message.author.id,
                                     name:pokeRequest.name,
                                     type: pokeRequest.type,
                                     shiny : isShiny, 
@@ -165,7 +164,7 @@ module.exports =  {
                                 Player.updateOne({playerId : playerId}, {
                                     pokeballs : pokeballs,
                                     pokemons : pokemonArray
-                                 }, (err)=>{console.log(`${message.author.id} updated: ${newPokemon}`)})
+                                 }, (err)=>{console.log(`${message.author.id} updated:`); console.log(newPokemon);})
 
                                 message.reply({ embeds: [Embed] });
                             }
@@ -404,6 +403,45 @@ module.exports =  {
                 )
             }
         )
+    },
+
+    /**
+     * Create a new User if player isn't in the database
+     * @param {Model} Player 
+     * @param {Model} Comment 
+     */
+     enterGame : (Player,Comment,playerId,message) =>{
+        Player.findOne({playerId : playerId})
+        .then( playerThatSentMessage =>{
+            if(playerThatSentMessage == undefined){
+                const newPlayer = new Player({
+                    playerId: playerId,
+                    icon: message.author.avatar,
+                    tag: message.author.tag,
+                    points : message.content.length,
+                });
+        
+                const newComment = new Comment({
+                    playerId: playerId,
+                    lastComment: new Date()
+                })
+                newPlayer.save()
+                .then( player => {
+                    console.log(`Player: ${player}`)
+        
+                    newComment.save()
+                    .then(comment => console.log(`Comment: ${comment}`))
+                    .catch(err => console.log(err));
+        
+                    message.reply("Congrats, you just entered into the pokemon world :D");
+                })
+                .catch(err => console.log(err));
+            }
+            else{
+                message.reply("You are already into the game");
+            }
+        })
+        
     }
     
 

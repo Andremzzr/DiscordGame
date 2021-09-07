@@ -1,34 +1,6 @@
 module.exports = {
     
     /**
-     * Create a new User if player isn't in the database
-     * @param {Model} Player 
-     * @param {Model} Comment 
-     */
-    createNewUser : (Player,Comment,playerId,message) =>{
-        const newPlayer = new Player({
-            playerId: playerId,
-            icon: message.author.avatar,
-            tag: message.author.tag,
-            points : message.content.length,
-        });
-
-        const newComment = new Comment({
-            playerId: playerId,
-            lastComment: new Date()
-        })
-        newPlayer.save()
-        .then( player => {
-            console.log(`Player: ${player}`)
-
-            newComment.save()
-            .then(comment => console.log(`Comment: ${comment}`))
-            .catch(err => console.log(err));
-        })
-        .catch(err => console.log(err));
-    },
-    
-    /**
      * Update User
      * @param {Model} Player 
      * @param {Model} Comment 

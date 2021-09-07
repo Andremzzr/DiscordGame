@@ -14,11 +14,11 @@ const {
     buycard,
     sellPokemon,
     market,
-    buypokemon
+    buypokemon,
+    enterGame
     } = require('./methods/commands');
 
-const {
-    createNewUser, 
+const { 
     updateUser
 } = require('./methods/normalMessage');
 
@@ -91,7 +91,10 @@ client.on("message", async (message) => {
                 break;
             case 'buypokemon':
                 buypokemon(message,Player,Pokemon,args[0]);
-                break;    
+                break;
+            case 'entergame':
+                enterGame(Player,Comment, playerId,message);
+                break;
             default:
                 break;
         }
@@ -106,20 +109,13 @@ client.on("message", async (message) => {
         Player.find({playerId : playerId})
         .then(
             player => {
-                //CREATING PLAYER IN DOCUMENT
-                if(player <= 0){    
-                    createNewUser(Player,Comment, playerId,message);
+                //UPDATING PLAYER
+                if(player > 0){    
+                    updateUser(Player,Comment, playerId,player,message);
                 }
                 
-                //UPDATING PLAYER DATA
-                else{
-                    updateUser(Player,Comment, playerId,player,message);
-    
-                }
             }
-        )
-        
-        
+        )        
     }
     
 
