@@ -110,7 +110,8 @@ client.on("message", async (message) => {
         .then(
             player => {
                 //UPDATING PLAYER
-                if(player > 0){    
+                if(player != 0){
+
                     updateUser(Player,Comment, playerId,player,message);
                 }
                 
