@@ -106,11 +106,11 @@ client.on("message", async (message) => {
     
     //HANDLE NORMAL MESSAGES
     else{
-        Player.find({playerId : playerId})
+        Player.findOne({playerId : playerId})
         .then(
             player => {
                 //UPDATING PLAYER
-                if(player != 0){
+                if(player != undefined){
 
                     updateUser(Player,Comment, playerId,player,message);
                 }

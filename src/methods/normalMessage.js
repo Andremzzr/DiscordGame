@@ -14,7 +14,7 @@ module.exports = {
                 if(now - comment.lastComment < 30000) return;
 
                 let newPoints;
-                message.attachments.size > 0 ?  newPoints = player[0].points + message.content.length + 20 : newPoints = player[0].points + message.content.length; 
+                message.attachments.size > 0 ?  newPoints = player.points + message.content.length + 20 : newPoints = player.points + message.content.length; 
                 
                 
                 if(message.author.avatar != player.icon){
