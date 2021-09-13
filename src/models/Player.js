@@ -29,6 +29,10 @@ const PlayerSchema = new mongoose.Schema({
     cards : {
         type: Array,
         default: []
+    },
+    activities : {
+        type: Array,
+        default: []
     }
 });
 

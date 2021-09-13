@@ -22,22 +22,25 @@ module.exports = {
                         points : newPoints,
                         icon: message.author.avatar
                         }, (err)=>{ if(err)console.log(err)}
-                    );
-                        
-                    Comment.updateOne({playerId: playerId},{
-                        lastComment : now
-                    }, (err)=>{ if(err)console.log(err)});
+                    );                        
+                }
+                else if(message.author.tag != player.tag){
+                    Player.updateOne({playerId : playerId}, {
+                        points : newPoints,
+                        tag: message.author.tag
+                        }, (err)=>{ if(err)console.log(err)}
+                    );                       
                 }
                 else{
                     Player.updateOne({playerId : playerId}, {
                         points : newPoints
                         }, (err)=>{ if(err)console.log(err)}
-                    );
-                        
-                    Comment.updateOne({playerId: playerId},{
-                        lastComment : now
-                    }, (err)=>{ if(err)console.log(err)});
+                    );   
                 }
+
+                Comment.updateOne({playerId: playerId},{
+                    lastComment : now
+                }, (err)=>{ if(err)console.log(err)});
 
             }
         )
