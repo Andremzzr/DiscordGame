@@ -1,7 +1,8 @@
 module.exports = async (image, description,player) => {
     const newActivitie = {
         image: image,
-        message: description
+        message: description,
+        date: Date.now()
     };
 
     if(player.activities.length == 5){
