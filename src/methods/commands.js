@@ -1,3 +1,5 @@
+const handleActivitie = require('../activities/handleActivities');
+
 module.exports =  {
 
     commandPoints : (Player, message, playerId) => {
@@ -160,10 +162,13 @@ module.exports =  {
                                 .setTimestamp()
 
                                 pokeballs[index]-= 1;
+                                
+                                handleActivitie(pokeRequest.image,`Caught a ${pokeRequest.name}`,player);
 
                                 Player.updateOne({playerId : playerId}, {
                                     pokeballs : pokeballs,
-                                    pokemons : pokemonArray
+                                    pokemons : pokemonArray,
+                                    activities: player.activities
                                  }, (err)=>{console.log(`${message.author.id} updated:`); console.log(newPokemon);})
 
                                 message.reply({ embeds: [Embed] });
@@ -228,10 +233,12 @@ module.exports =  {
                             
                             const points = player.points;
 
+                            handleActivitie(cardRequest.image, `Bought a card: ${cardRequest.name}`,player);
 
                             Player.updateOne({playerId : message.author.id}, {
                                 cards : cardsArray,
-                                points : points - 500
+                                points : points - 500,
+                                activities: player.activities
                              }, (err)=>{console.log("Player Updated")})
 
                              message.reply({ embeds: [Embed] });
@@ -310,12 +317,15 @@ module.exports =  {
                         shiny : sellingPokemons[0].shiny
                     });
 
+                    handleActivitie(sellingPokemons[0].image,`Sold a ${sellingPokemons[0].name}`,player[0]);
+
                     newPokemon.save()
                     .then(pokemon => console.log(`Pokemon saved: ${pokemon.pokemonId}`))
                     .catch(err => console.log(`Error: ${err}`));
 
                     Player.updateOne({playerId : message.author.id}, {
-                        pokemons : newPokemons
+                        pokemons : newPokemons,
+                        activities: player[0].activities
                      }, (err)=>{ message.reply(`Your pokemon ${sellingPokemons[0].name} is on sale for ${price} pts!`)})
                 }
             }
@@ -379,10 +389,12 @@ module.exports =  {
                         });
 
                         const buyerPoints = buyer[0].points;
-                        
+                        handleActivitie(pokemon[0].image,`Bought a ${pokemon[0].Name}`,buyer);
+
                         Player.updateOne({playerId:message.author.id},{
                             pokemons : pokemonArray,
-                            points : buyerPoints - pokemon[0].pokemonPrice
+                            points : buyerPoints - pokemon[0].pokemonPrice,
+                            activities: buyer.activities
                         }, err => message.reply(`You bought the ${pokemon[0].pokemonName} ${pokemon[0].pokemonId}`));
 
                         Player.find({playerId: pokemon[0].playerId})
