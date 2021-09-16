@@ -1,4 +1,8 @@
 ### This is a Discord Game using Pokemon api
+-I'm using MongoDb for the database and all documents are structured down bellow:
+##
+![Dev](https://media.discordapp.net/attachments/587446659835756546/888116301422272562/1674b99e-cf5b-4897-9a3e-a7567b2e2b14.png?width=1005&height=670)
+
 
 -To access all this commands you must create this text channel in your server:
 ##
