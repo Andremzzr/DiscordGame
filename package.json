@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start" : "node src/discord.js"
+    "start": "node src/discord.js"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +15,7 @@
     "discord.js": "^13.0.1",
     "dotenv": "^10.0.0",
     "mongoose": "^5.13.7",
+    "node": "16.6.0",
     "telegraf": "^4.4.1"
   }
 }
