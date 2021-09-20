@@ -14,7 +14,16 @@ module.exports = {
                 if(now - comment.lastComment < 30000) return;
 
                 let newPoints;
-                message.attachments.size > 0 ?  newPoints = player.points + message.content.length + 20 : newPoints = player.points + message.content.length; 
+                if(message.attachments.size > 0 ){
+                    newPoints = player.points + message.content.length + 20 
+                } else{
+                    if(message.content.split('').every((val,i, arr) => val == arr[0]) == true){
+                        newPoints = player.points + 10;
+                    }
+                    else{
+                        newPoints = player.points + message.content.length; 
+                    }
+                }
                 
                 if(message.author.avatar != player.icon){
                     Player.updateOne({playerId : playerId}, {
