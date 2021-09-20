@@ -95,9 +95,6 @@ client.on("message", async (message) => {
             case 'entergame':
                 enterGame(Player,Comment, playerId,message);
                 break;
-            case 'commands': 
-                commands(message)
-                break;
             default:
                 break;
         }
