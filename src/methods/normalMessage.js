@@ -15,7 +15,7 @@ module.exports = {
 
                 let newPoints;
                 message.attachments.size > 0 ?  newPoints = player.points + message.content.length + 20 : newPoints = player.points + message.content.length; 
-                
+                message.content.length > 100 ? newPoints = 50 : newPoints = message.content.length;
                 
                 if(message.author.avatar != player.icon){
                     Player.updateOne({playerId : playerId}, {
