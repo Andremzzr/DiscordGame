@@ -454,6 +454,11 @@ module.exports =  {
             }
         })
         
+    },
+
+    commands: (message) => {
+        const commandsMessage = `$stats\n$points\n$stats\$catch [pokeball name]\n$buypokeball [quantity] [pokeball's name]\n$buycard [pokemon id]\n$prices\n$entergame`
+        message.reply(commandsMessage);
     }
     
 

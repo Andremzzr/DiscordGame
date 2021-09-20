@@ -44,7 +44,7 @@ client.once('ready', () => {
 
 client.on("message", async (message) => {
     if(message.author.bot) return ;
-    if(message.content.length == 0 || message.content.length > 200) return;
+    if(message.content.length == 0 || message.content.length > 200 ||  message.content.length < 5) return;
 
     const playerId = message.author.id;
     const Player = require('./models/Player');
@@ -94,6 +94,9 @@ client.on("message", async (message) => {
                 break;
             case 'entergame':
                 enterGame(Player,Comment, playerId,message);
+                break;
+            case 'commands': 
+                commands(message)
                 break;
             default:
                 break;
