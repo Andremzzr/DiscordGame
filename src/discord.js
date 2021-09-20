@@ -15,7 +15,8 @@ const {
     sellPokemon,
     market,
     buypokemon,
-    enterGame
+    enterGame,
+    helpCommand
     } = require('./methods/commands');
 
 const { 
@@ -27,6 +28,7 @@ const mongoose = require('mongoose');
 
 //DB CONFIG
 const db =require('./config/key').MongoUri;
+const commands = require('./methods/commands');
 
 //CONNECT TO MONGO
 mongoose.connect(db, {useNewUrlParser: true, useUnifiedTopology: true})
@@ -94,6 +96,9 @@ client.on("message", async (message) => {
                 break;
             case 'entergame':
                 enterGame(Player,Comment, playerId,message);
+                break;
+            case 'help': 
+                helpCommand(message);
                 break;
             default:
                 break;

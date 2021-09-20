@@ -456,6 +456,11 @@ module.exports =  {
         
     },
 
+    helpCommand: (message) => {
+        const helpMsg = `$stats\n$prices\n$points\n$buypokeball [quantity ex: 1] [pokeball ex: ultra]\n$catch [pokeball ex: ultra]\n$buycard [pokemon's name]\n$sellpokemon [pokemon's id] [price ex :500]\n$buypokemon [pokemon's id]`;
+        message.reply(helpMsg);
+    }
+
 
 
 }
